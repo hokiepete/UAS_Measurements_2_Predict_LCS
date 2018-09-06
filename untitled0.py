@@ -16,6 +16,10 @@ ross4= [-106.040772,37.780315]
 schmale4 = [-106.0422978,37.78155488]
 ground = [-106.03917,37.781644]
 
+plt.scatter(ross4[0],ross4[1])
+plt.scatter(schmale4[0],schmale4[1])
+plt.scatter(ground[0],ground[1])
+"""
 print(f.lonlat2m(schmale4[0],schmale4[1],ross4[0],ross4[1]))
 
 ross4 = f.lonlat2m(ground[0],ground[1],ross4[0],ross4[1])
@@ -115,3 +119,4 @@ plt.savefig('s1_colorado_campaign.png', transparent=False, bbox_inches='tight',p
 
 
 
+#"""
