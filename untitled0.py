@@ -15,11 +15,14 @@ plt.close('all')
 ross4= [-106.040772,37.780315]
 schmale4 = [-106.0422978,37.78155488]
 ground = [-106.03917,37.781644]
+<<<<<<< HEAD
 
 plt.scatter(ross4[0],ross4[1])
 plt.scatter(schmale4[0],schmale4[1])
 plt.scatter(ground[0],ground[1])
 """
+=======
+>>>>>>> 59c3ef21aa68d607891b05e14f6ba28cb98bbfba
 print(f.lonlat2m(schmale4[0],schmale4[1],ross4[0],ross4[1]))
 
 ross4 = f.lonlat2m(ground[0],ground[1],ross4[0],ross4[1])
