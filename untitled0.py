@@ -15,7 +15,13 @@ plt.close('all')
 ross4= [-106.040772,37.780315]
 schmale4 = [-106.0422978,37.78155488]
 ground = [-106.03917,37.781644]
-
+'''
+ross4/schmale4
+Ross22/Schmale9
+Ross23/Schmale10
+Ross25/Schmale11
+Ross26/Schmale12
+'''
 print(f.lonlat2m(schmale4[0],schmale4[1],ross4[0],ross4[1]))
 
 ross4 = f.lonlat2m(ground[0],ground[1],ross4[0],ross4[1])
@@ -98,15 +104,15 @@ for t in range(ground_data.shape[0]):
     J = np.array([[dudx,dudy],[dvdx,dvdy]])
     S = 0.5*(J+J.T)
     s1.append(np.linalg.eig(S)[0].min())
-    
-hrs, sec = np.divmod(ross4_data['time'],3600)
+plt.plot(sec,s1)
+#hrs, sec = np.divmod(ross4_data['time'],3600)
 #mins, sec = np.divmod(mins,60)
 
 #plot_time = []
 #for t in range(ground_data.shape[0]):
 #    plot_time.append(str(hrs[t])+':'+str(mins[t])+':'+str(sec[t]))
 
-plt.plot(sec,s1)
+
 plt.title('s$_{1}$ from ross4 & schmale4 flight')
 plt.xlabel('seconds since 1600hrs Mountain Time, 2018-07-14')
 plt.ylabel('sec$^{-1}$')
