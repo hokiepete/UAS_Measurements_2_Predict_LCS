@@ -1,3 +1,4 @@
 
 *.nc
 wrf_les.npz
+*.npz
