@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 import time as t_func
 plt.close('all')
 
-F = np.load('wrf_les_s1.npz')
+F = np.load('wrf_les_temp.npz')
 x = F['x']
 y = F['y']
 wrf_time = F['time']
@@ -23,8 +23,9 @@ tf = t_func.gmtime(wrf_time[-1]).tm_hour-6
 wrf_time = np.linspace(t0,tf,wrf_time.shape[0])
 proj_center_lon = F['proj_center_lon']
 proj_center_lat = F['proj_center_lat']
-s1_wrf = F['s1']
+temp_wrf = F['temp']
 F.close()
+
 ground5 = [-106.041504,37.782005]
 ground = ground5
 
@@ -44,14 +45,14 @@ dy = ground_m[1] - schmale_pos_m[1]
 points = (wrf_time,y,x)
 [yi,zi,xi] = np.meshgrid(schmale_pos_m[1],wrf_time,ground_m[0])
 Xi = (zi.ravel(),yi.ravel(),xi.ravel())
-fs1 = RegularGridInterpolator(points,s1_wrf)
-s1_plot = fs1(Xi)
+ftemp = RegularGridInterpolator(points,temp_wrf)
+tempurature_plot = ftemp(Xi)
 
-s1=[]
+tempurature=[]
 plt_sec=[]
 for i, pair in enumerate(paired_flights):
     plt_sec_temp = []
-    s1_temp = []
+    tempurature_temp = []
     
     ross_data = pd.read_csv('Ross{:d}_DroneMetData.txt'.format(pair[0]), delim_whitespace=True,header=1,names=['date','time','wind_speed','wind_dir','temp'])
     seconds = []
@@ -94,55 +95,38 @@ for i, pair in enumerate(paired_flights):
     
     ground_data=ground_data[min_time<=ground_data['time']]
     ground_data=ground_data[ground_data['time']<=max_time]
-
     points = [(ross_pos_m[0],ross_pos_m[1]),(schmale_pos_m[0],schmale_pos_m[1]),(ground_m[0],ground_m[1])]
+    
     for t in range(ground_data.shape[0]):
         if ground_data.iloc[t]['time'] != schmale_data.iloc[t]['time'] or ground_data.iloc[t]['time'] != ross_data.iloc[t]['time']:
             print('ERROR: Sample Time Inequal @ {0}'.format(t))
             break
-        values = [ross_data.iloc[t]['wind_speed'],schmale_data.iloc[t]['wind_speed'],ground_data.iloc[t]['wind_speed']]
-        wind_speed = griddata(points,values,(ground_m[0],schmale_pos_m[1]),method='cubic')
-        values = [ross_data.iloc[t]['wind_dir'],schmale_data.iloc[t]['wind_dir'],ground_data.iloc[t]['wind_dir']]
-        wind_dir = griddata(points,values,(ground_m[0],schmale_pos_m[1]),method='cubic')
-
-        u = -wind_speed*np.sin(f.deg2rad(wind_dir))
-        v = wind_speed*np.cos(f.deg2rad(wind_dir))
-
-        u_schmale = -schmale_data.iloc[t]['wind_speed']*np.sin(f.deg2rad(schmale_data.iloc[t]['wind_dir']))
-        v_schmale = schmale_data.iloc[t]['wind_speed']*np.cos(f.deg2rad(schmale_data.iloc[t]['wind_dir']))
-
-        u_ground = -ground_data.iloc[t]['wind_speed']*np.sin(f.deg2rad(ground_data.iloc[t]['wind_dir']))
-        v_ground = ground_data.iloc[t]['wind_speed']*np.cos(f.deg2rad(ground_data.iloc[t]['wind_dir']))
-
-        dudx = (u-u_schmale)/dx
-        dudy = (u_ground-u)/dy
-        dvdx = (v-v_schmale)/dx
-        dvdy = (v_ground-v)/dy
+        values = [ross_data.iloc[t]['temp'],schmale_data.iloc[t]['temp'],ground_data.iloc[t]['temp']]
+        air_temp = griddata(points,values,(ground_m[0],schmale_pos_m[1]),method='cubic')
         
-        J = np.array([[dudx,dudy],[dvdx,dvdy]])
-        S = 0.5*(J+J.T)
         plt_sec_temp.append(ground_data.iloc[t]['time'])
-        s1_temp.append(np.linalg.eig(S)[0].min())
+        tempurature_temp.append(air_temp)
     
     plt_sec.append(plt_sec_temp)
-    s1.append(s1_temp)
+    tempurature.append(tempurature_temp)
     
 
 height = 8
 width = height*1.61803398875
 plt.close('all')
 plt.figure(1,figsize=(width,height))
-plt.plot(wrf_time,s1_plot,linewidth=3)
-for x,y in zip(plt_sec,s1):
+plt.plot(wrf_time,tempurature_plot-273.15,linewidth=3)
+for x,y in zip(plt_sec,tempurature):
     x=[element/3600 for element in x]
     plt.plot(x,y,linewidth=1)
     y_mean = np.mean(y)
     plt.plot([x[0],x[-1]],[y_mean,y_mean],'k',linewidth=3)
-plt.title('s$_{1}$ from WRF overlaid with s$_{1}$ from coordinated flights')
+plt.title('Tempurature from WRF overlaid with tempurature from coordinated flights')
 plt.xlabel('Hours since 0000hrs Mountain Time, 2018-07-17')
-plt.ylabel('sec$^{-1}$')
+plt.ylabel('degrees C')
 plt.xlim([12,16])
-plt.savefig('s1_colorado_campaign_WRF_2018-07-17.png', transparent=False, bbox_inches='tight',pad_inches=0)
+plt.savefig('temp_colorado_campaign_WRF_2018-07-17.png', transparent=False, bbox_inches='tight',pad_inches=0)
+
 #"""
 
 

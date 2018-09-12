@@ -8,7 +8,7 @@ Created on Mon Sep 10 14:48:17 2018
 from os import listdir
 from netCDF4 import Dataset
 import numpy as np
-from scipy.interpolate import griddata, LinearNDInterpolator, RegularGridInterpolator
+from scipy.interpolate import RegularGridInterpolator
 files = listdir('wrf_les/')
 xdim = 1008
 ydim = 882
