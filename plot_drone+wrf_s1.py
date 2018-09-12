@@ -70,7 +70,7 @@ for i, pair in enumerate(paired_flights):
         seconds.append(hrs_in_sec+min_in_sec+sec)
     schmale_data['time'] = seconds
 
-    ground_data = pd.read_csv('Ground2_MetData.txt', delim_whitespace=True,header=1,names=['date','time','wind_speed','wind_dir','temp'])
+    ground_data = pd.read_csv('Ground5_MetData.txt', delim_whitespace=True,header=1,names=['date','time','wind_speed','wind_dir','temp'])
     seconds = []
     for t in range(ground_data.shape[0]):
         hrs_in_sec = int(ground_data['time'][t][0:2])*3600
