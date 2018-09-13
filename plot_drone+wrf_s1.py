@@ -11,15 +11,16 @@ from scipy.interpolate import griddata, RegularGridInterpolator
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import time as t_func
+#import time as t_func
+from time import gmtime
 plt.close('all')
 
 F = np.load('wrf_les_s1.npz')
 x = F['x']
 y = F['y']
 wrf_time = F['time']
-t0 = t_func.gmtime(wrf_time[0]).tm_hour-6
-tf = t_func.gmtime(wrf_time[-1]).tm_hour-6
+t0 = gmtime(wrf_time[0]).tm_hour-6
+tf = gmtime(wrf_time[-1]).tm_hour-6
 wrf_time = np.linspace(t0,tf,wrf_time.shape[0])
 proj_center_lon = F['proj_center_lon']
 proj_center_lat = F['proj_center_lat']

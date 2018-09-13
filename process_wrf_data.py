@@ -10,6 +10,9 @@ from netCDF4 import Dataset
 import numpy as np
 from scipy.interpolate import RegularGridInterpolator
 files = listdir('wrf_les/')
+
+interp_method = 'linear'
+
 xdim = 1008
 ydim = 882
 zdim = 20
@@ -34,9 +37,9 @@ time[tt] = vars['time'][:]
 [yi,zi,xi] = np.meshgrid(y,[15],x)
 points = (z,y,x)
 Xi = (zi.ravel(),yi.ravel(),xi.ravel())
-fu = RegularGridInterpolator(points,vars['UGRD_HTGL'][:].squeeze())
+fu = RegularGridInterpolator(points,vars['UGRD_HTGL'][:].squeeze(),method=interp_method)
 u[tt,:,:] = fu(Xi).reshape([ydim,xdim])
-fv = RegularGridInterpolator(points,vars['VGRD_HTGL'][:].squeeze())
+fv = RegularGridInterpolator(points,vars['VGRD_HTGL'][:].squeeze(),method=interp_method)
 v[tt,:,:] = fv(Xi).reshape([ydim,xdim])
 
 
@@ -46,9 +49,9 @@ for tt in range(1,len(files)):
     root = Dataset(ncfile,'r') #read the data
     vars = root.variables #dictionary, all variables in dataset
     time[tt] = vars['time'][:]
-    fu = RegularGridInterpolator(points,vars['UGRD_HTGL'][:].squeeze())
+    fu = RegularGridInterpolator(points,vars['UGRD_HTGL'][:].squeeze(),method=interp_method)
     u[tt,:,:] = fu(Xi).reshape([ydim,xdim])
-    fv = RegularGridInterpolator(points,vars['VGRD_HTGL'][:].squeeze())
+    fv = RegularGridInterpolator(points,vars['VGRD_HTGL'][:].squeeze(),method=interp_method)
     v[tt,:,:] = fv(Xi).reshape([ydim,xdim])
 
     

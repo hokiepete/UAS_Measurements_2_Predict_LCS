@@ -9,7 +9,8 @@ import numpy as np
 
 dx = 111
 dy = 111
-F = np.load('wrf_les.npz')
+#F = np.load('wrf_les.npz')
+F = np.load('wrf_les_4_animation0.npz')
 x = F['x']
 y = F['y']
 time = F['time']
@@ -26,7 +27,7 @@ xdim = x.shape[0]
 ydim = y.shape[0]
 
 s1 = np.ma.empty([tdim,ydim,xdim])
-for tt in range(tdim):
+for tt in {10}:#range(tdim):
     print(tt)
     dudy,dudx = np.gradient(u[tt,:,:],dy,dx,edge_order=2)
     dvdy,dvdx = np.gradient(v[tt,:,:],dy,dx,edge_order=2)
@@ -41,8 +42,8 @@ for tt in range(tdim):
                 s1[tt,i,j] = np.ma.masked
     
 
-
-np.savez('wrf_les_s1.npz',s1=s1,time=time,x=x,y=y,lon=lon,lat=lat,proj_center_lon=proj_center_lon,proj_center_lat=proj_center_lat)        
+#np.savez('wrf_les_s1_4_animation0.npz',s1=s1,time=time,x=x,y=y,lon=lon,lat=lat,proj_center_lon=proj_center_lon,proj_center_lat=proj_center_lat)        
+#np.savez('wrf_les_s1.npz',s1=s1,time=time,x=x,y=y,lon=lon,lat=lat,proj_center_lon=proj_center_lon,proj_center_lat=proj_center_lat)        
 
 
 
