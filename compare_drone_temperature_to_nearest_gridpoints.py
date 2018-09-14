@@ -21,11 +21,10 @@ interp_method = 'nearest'
 xdim = 1008
 ydim = 882
 zdim = 20
-height_level = 0
+height_level = 1
 tdim = len(files)
 time = np.empty([tdim])
-u = np.empty([tdim,ydim,xdim])
-v = np.empty([tdim,ydim,xdim])
+wrf_temp = np.empty([tdim,ydim,xdim])
 
 tt=0
 print(tt)
@@ -34,13 +33,13 @@ root = Dataset(ncfile,'r') #read the data
 vars = root.variables #dictionary, all variables in dataset
 x = vars['x0'][:]*1000
 y = vars['y0'][:]*1000
+#z = vars['z3'][:]*1000
 lon = vars['lon0'][:]
 lat = vars['lat0'][:]
 proj_center_lon = getattr(vars['grid_mapping_0'],'longitude_of_projection_origin')
 proj_center_lat = getattr(vars['grid_mapping_0'],'latitude_of_projection_origin')
 time[tt] = vars['time'][:]
-u[tt,:,:] = vars['UGRD_HTGL'][0,height_level,:,:].squeeze()
-v[tt,:,:] = vars['VGRD_HTGL'][0,height_level,:,:].squeeze()
+wrf_temp[tt,:,:] = vars['TMP_HTGL'][0,height_level].squeeze()-273.15
 root.close()
 
 for tt in range(1,tdim):
@@ -49,12 +48,9 @@ for tt in range(1,tdim):
     root = Dataset(ncfile,'r') #read the data
     vars = root.variables #dictionary, all variables in dataset
     time[tt] = vars['time'][:]
-    u[tt,:,:] = vars['UGRD_HTGL'][0,height_level,:,:].squeeze()
-    v[tt,:,:] = vars['VGRD_HTGL'][0,height_level,:,:].squeeze()
+    wrf_temp[tt,:,:] = vars['TMP_HTGL'][0,height_level].squeeze()-273.15
     root.close()
 
-speed = u**2+v**2
-del u,v
 t0 = gmtime(time[0]).tm_hour-6
 tf = gmtime(time[-1]).tm_hour-6
 time = np.linspace(t0,tf,time.shape[0])
@@ -79,17 +75,17 @@ schmale_pos_m = f.lonlat2m(proj_center_lon,proj_center_lat,schmale_lon,schmale_l
 points = (time,y,x)
 [yi,ti,xi] = np.meshgrid(ross_pos_m[1],time,ross_pos_m[0])
 Xi = (ti.ravel(),yi.ravel(),xi.ravel())
-fs = RegularGridInterpolator(points,speed,method=interp_method)
+fs = RegularGridInterpolator(points,wrf_temp,method=interp_method)
 ross_comp_speed = fs(Xi)
 
 [yi,ti,xi] = np.meshgrid(schmale_pos_m[1],time,schmale_pos_m[0])
 Xi = (ti.ravel(),yi.ravel(),xi.ravel())
-fs = RegularGridInterpolator(points,speed,method=interp_method)
+fs = RegularGridInterpolator(points,wrf_temp,method=interp_method)
 schmale_comp_speed = fs(Xi)
 
 [yi,ti,xi] = np.meshgrid(ground_m[1],time,ground_m[0])
 Xi = (ti.ravel(),yi.ravel(),xi.ravel())
-fs = RegularGridInterpolator(points,speed,method=interp_method)
+fs = RegularGridInterpolator(points,wrf_temp,method=interp_method)
 ground_comp_speed = fs(Xi)
 
 ground_data = pd.read_csv('Ground5_MetData.txt', delim_whitespace=True,header=1,names=['date','time','wind_speed','wind_dir','temp'])
@@ -99,7 +95,7 @@ for t in range(ground_data.shape[0]):
     min_in_sec = int(ground_data['time'][t][3:5])*60
     sec = int(ground_data['time'][t][6:8])
     seconds.append(hrs_in_sec+min_in_sec+sec)
-ground_speed = ground_data['wind_speed']
+ground_speed = ground_data['temp']
 ground_sec = [x/3600 for x in seconds]
 
 
@@ -116,7 +112,7 @@ for i, pair in enumerate(paired_flights):
         sec = int(ross_data['time'][t][6:8])
         seconds.append(hrs_in_sec+min_in_sec+sec)
     ross_sec.append(seconds)
-    ross_speed.append(ross_data['wind_speed'])
+    ross_speed.append(ross_data['temp'])
     
     schmale_data = pd.read_csv('Schmale{:d}_DroneMetData.txt'.format(pair[1]), delim_whitespace=True,header=1,names=['date','time','wind_speed','wind_dir','temp'])
     seconds = []
@@ -125,7 +121,7 @@ for i, pair in enumerate(paired_flights):
         min_in_sec = int(schmale_data['time'][t][3:5])*60
         sec = int(schmale_data['time'][t][6:8])
         seconds.append(hrs_in_sec+min_in_sec+sec)
-    schmale_speed.append(schmale_data['wind_speed'])
+    schmale_speed.append(schmale_data['temp'])
     schmale_sec.append(seconds)
 
     
@@ -137,9 +133,9 @@ plt.figure(1,figsize=(width,height))
 plt.subplot(311)
 plt.plot(time,ground_comp_speed)
 plt.plot(ground_sec,ground_speed)
-plt.title('Wind speed from WRF overlaid with wind speed from ground')
+plt.title('Temperature from WRF overlaid with temperature from ground')
 #plt.xlabel('Hours since 0000hrs Mountain Time, 2018-07-17')
-plt.ylabel('m/s')
+plt.ylabel('degrees C')
 plt.xlim([12,16])
 
 plt.subplot(312)
@@ -147,8 +143,8 @@ plt.plot(time,ross_comp_speed)
 for x,y in zip(ross_sec,ross_speed):
     x=[element/3600 for element in x]
     plt.plot(x,y)
-plt.title('Wind speed from WRF overlaid with wind speed from Ross flights')
-plt.ylabel('m/s')
+plt.title('Temperature from WRF overlaid with temperature from Ross flights')
+plt.ylabel('degrees C')
 plt.xlim([12,16])
 
 plt.subplot(313)
@@ -156,9 +152,9 @@ plt.plot(time,schmale_comp_speed)
 for x,y in zip(schmale_sec,schmale_speed):
     x=[element/3600 for element in x]
     plt.plot(x,y)
-plt.title('Wind speed from WRF overlaid with wind speed from schmale flights')
-plt.ylabel('m/s')
+plt.title('Temperature from WRF overlaid with temperature from schmale flights')
+plt.ylabel('degrees C')
 plt.xlim([12,16])
 plt.xlabel('Hours since 0000hrs Mountain Time, 2018-07-17')
-plt.savefig('temperature_comparison_colorado_campaign_WRF_2018-07-17.png', transparent=False, bbox_inches='tight',pad_inches=0)
+plt.savefig('temperature_comparison_colorado_campaign_WRF_2018-07-17_wrf=30m.png', transparent=False, bbox_inches='tight',pad_inches=0)
 

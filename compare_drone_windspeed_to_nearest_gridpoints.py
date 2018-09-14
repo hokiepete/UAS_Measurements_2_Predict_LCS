@@ -53,7 +53,22 @@ for tt in range(1,tdim):
     v[tt,:,:] = vars['VGRD_HTGL'][0,height_level,:,:].squeeze()
     root.close()
 
-speed = u**2+v**2
+
+speed = np.sqrt(u**2+v**2)
+
+plt.figure(2)
+plt.subplot(221)
+plt.pcolormesh(x,y,speed[-1,:,:])
+plt.colorbar()
+
+plt.subplot(222)
+plt.pcolormesh(x,y,u[-1,:,:])
+plt.colorbar()
+
+plt.subplot(223)
+plt.pcolormesh(x,y,v[-1,:,:])
+plt.colorbar()
+
 del u,v
 t0 = gmtime(time[0]).tm_hour-6
 tf = gmtime(time[-1]).tm_hour-6
@@ -132,7 +147,7 @@ for i, pair in enumerate(paired_flights):
 
 height = 10
 width = height*1.61803398875
-plt.close('all')
+
 plt.figure(1,figsize=(width,height))
 plt.subplot(311)
 plt.plot(time,ground_comp_speed)
