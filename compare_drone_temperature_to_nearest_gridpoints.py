@@ -98,6 +98,21 @@ for t in range(ground_data.shape[0]):
 ground_speed = ground_data['temp']
 ground_sec = [x/3600 for x in seconds]
 
+MURC_data = pd.read_csv('MSLOG_20180717_TRIM.csv', sep=',',header=1,usecols={2,19},names=['time_stamp','temperature'])
+seconds = []
+for t in range(MURC_data.shape[0]):
+    if ':' not in MURC_data['time_stamp'][t][0:2]:
+        hrs_in_sec = int(MURC_data['time_stamp'][t][0:2])*3600
+        min_in_sec = int(MURC_data['time_stamp'][t][3:5])*60
+        sec = int(MURC_data['time_stamp'][t][6:8])
+    else:
+        hrs_in_sec = int(MURC_data['time_stamp'][t][0:1])*3600
+        min_in_sec = int(MURC_data['time_stamp'][t][2:4])*60
+        sec = int(MURC_data['time_stamp'][t][5:7])
+    seconds.append(hrs_in_sec+min_in_sec+sec)
+MURC_sec = [x/3600 for x in seconds]
+MURC_speed = MURC_data['temperature']
+
 
 ross_speed=[]
 ross_sec=[]
@@ -126,19 +141,31 @@ for i, pair in enumerate(paired_flights):
 
     
 
-height = 10
+height = 15
 width = height*1.61803398875
 plt.close('all')
 plt.figure(1,figsize=(width,height))
-plt.subplot(311)
+plt.subplot(411)
 plt.plot(time,ground_comp_speed)
 plt.plot(ground_sec,ground_speed)
 plt.title('Temperature from WRF overlaid with temperature from ground')
 #plt.xlabel('Hours since 0000hrs Mountain Time, 2018-07-17')
 plt.ylabel('degrees C')
 plt.xlim([12,16])
+plt.ylim([20,28])
+plt.xticks([])
 
-plt.subplot(312)
+plt.subplot(412)
+plt.plot(time,ground_comp_speed)
+plt.plot(MURC_sec,MURC_speed)
+plt.title('Temperature from WRF overlaid with temperature from MURC')
+#plt.xlabel('Hours since 0000hrs Mountain Time, 2018-07-17')
+plt.ylabel('degrees C')
+plt.xlim([12,16])
+plt.ylim([20,28])
+plt.xticks([])
+
+plt.subplot(413)
 plt.plot(time,ross_comp_speed)
 for x,y in zip(ross_sec,ross_speed):
     x=[element/3600 for element in x]
@@ -146,8 +173,10 @@ for x,y in zip(ross_sec,ross_speed):
 plt.title('Temperature from WRF overlaid with temperature from Ross flights')
 plt.ylabel('degrees C')
 plt.xlim([12,16])
+plt.ylim([20,28])
+plt.xticks([])
 
-plt.subplot(313)
+plt.subplot(414)
 plt.plot(time,schmale_comp_speed)
 for x,y in zip(schmale_sec,schmale_speed):
     x=[element/3600 for element in x]
@@ -155,6 +184,7 @@ for x,y in zip(schmale_sec,schmale_speed):
 plt.title('Temperature from WRF overlaid with temperature from schmale flights')
 plt.ylabel('degrees C')
 plt.xlim([12,16])
+plt.ylim([20,28])
 plt.xlabel('Hours since 0000hrs Mountain Time, 2018-07-17')
 plt.savefig('temperature_comparison_colorado_campaign_WRF_2018-07-17_wrf=30m.png', transparent=False, bbox_inches='tight',pad_inches=0)
 
