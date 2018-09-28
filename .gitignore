@@ -6,3 +6,11 @@
 *.TS
 *.UU
 *.VV
+wrf_les.npz
+wrf_les_4_animation0.npz
+wrf_les_4_animation1.npz
+wrf_les_s1.npz
+wrf_les_s1_4_animation0.npz
+wrf_les_s1_4_animation1.npz
+wrf_les_speed.npz
+wrf_les_temp.npz
