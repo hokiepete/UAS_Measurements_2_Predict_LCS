@@ -26,6 +26,13 @@ proj_center_lon = F['proj_center_lon']
 proj_center_lat = F['proj_center_lat']
 s1_wrf = F['s1']
 F.close()
+
+F = np.load('point_s1.npz')
+point_pos = F['pos']
+point_s1 = F['s1']
+point_time = F['time']
+F.close()
+
 ground5 = [-106.041504,37.782005]
 ground = ground5
 
@@ -145,13 +152,12 @@ for i, pair in enumerate(paired_flights):
     s1.append(s1_temp)
     
 
-height = 12
+height = 15
 width = height*1.61803398875
 
 plt.figure(1,figsize=(width,height))
 
-
-plt.subplot(221)
+plt.subplot(511)
 plt.plot(wrf_time,s1_plot)
 for x,y in zip(plt_sec,s1):
     x=[element/3600 for element in x]
@@ -163,30 +169,29 @@ plt.ylim([-0.08,0.02])
 plt.xticks([])
 #plt.xlabel('Housrs since 0000hrs Mountain Time, 2018-07-17')
 
-plt.subplot(222)
+plt.subplot(512)
 plt.plot(wrf_time,schmale_s1_plot)
 for x,y in zip(plt_sec,s1):
     x=[element/3600 for element in x]
     plt.plot(x,y)
 plt.title('s$_{1}$ from WRF nearest Schmale drone overlaid with s$_{1}$ from drone flights')
-#plt.xlabel('Hours since 0000hrs Mountain Time, 2018-07-17')
+plt.ylabel('s$^{-1}$')
 plt.xlim([12,16])
 plt.ylim([-0.08,0.02])
 plt.xticks([])
-plt.yticks([])
 
-plt.subplot(223)
+plt.subplot(513)
 plt.plot(wrf_time,ross_s1_plot)
 for x,y in zip(plt_sec,s1):
     x=[element/3600 for element in x]
     plt.plot(x,y)
 plt.title('s$_{1}$ from WRF nearest Ross drone overlaid with s$_{1}$ from drone flights')
 plt.ylabel('s$^{-1}$')
-plt.xlabel('Housrs since 0000hrs Mountain Time, 2018-07-17')
 plt.ylim([-0.08,0.02])
 plt.xlim([12,16])
+plt.xticks([])
 
-plt.subplot(224)
+plt.subplot(514)
 plt.plot(wrf_time,ground_s1_plot)
 for x,y in zip(plt_sec,s1):
     x=[element/3600 for element in x]
@@ -194,6 +199,18 @@ for x,y in zip(plt_sec,s1):
 plt.title('s$_{1}$ from WRF nearest MURC overlaid with s$_{1}$ from drone flights')
 plt.ylim([-0.08,0.02])
 plt.xlim([12,16])
+plt.ylabel('s$^{-1}$')
+plt.xticks([])
+
+plt.subplot(515)
+plt.plot(point_time,point_s1)
+for x,y in zip(plt_sec,s1):
+    x=[element/3600 for element in x]
+    plt.plot(x,y)
+plt.title('s$_{1}$ from WRF Time Series overlaid with s$_{1}$ from drone flights')
+plt.ylim([-0.08,0.02])
+plt.xlim([12,16])
+plt.ylabel('s$^{-1}$')
 plt.xlabel('Housrs since 0000hrs Mountain Time, 2018-07-17')
-plt.yticks([])
+
 plt.savefig('s1_comparison_colorado_campaign_WRF_2018-07-17.png', transparent=False, bbox_inches='tight',pad_inches=0)

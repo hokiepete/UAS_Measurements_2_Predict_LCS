@@ -21,7 +21,7 @@ interp_method = 'nearest'
 xdim = 1008
 ydim = 882
 zdim = 20
-height_level = 1
+height_level = 0
 tdim = len(files)
 time = np.empty([tdim])
 wrf_temp = np.empty([tdim,ydim,xdim])
@@ -55,6 +55,8 @@ t0 = gmtime(time[0]).tm_hour-6
 tf = gmtime(time[-1]).tm_hour-6
 time = np.linspace(t0,tf,time.shape[0])
 
+uk_stat_pos = [-106.03917,37.781644]
+
 ground5 = [-106.041504,37.782005]
 ground = ground5
 
@@ -69,8 +71,7 @@ paired_flights = [(22,9),(23,10),(25,11),(26,12)]
 ground_m = f.lonlat2m(proj_center_lon,proj_center_lat,ground[0],ground[1])
 ross_pos_m = f.lonlat2m(proj_center_lon,proj_center_lat,ross_lon,ross_lat)
 schmale_pos_m = f.lonlat2m(proj_center_lon,proj_center_lat,schmale_lon,schmale_lat)
-
-
+uk_stat_pos_m = f.lonlat2m(proj_center_lon,proj_center_lat,uk_stat_pos[0],uk_stat_pos[1])
 
 points = (time,y,x)
 [yi,ti,xi] = np.meshgrid(ross_pos_m[1],time,ross_pos_m[0])
@@ -87,6 +88,11 @@ schmale_comp_speed = fs(Xi)
 Xi = (ti.ravel(),yi.ravel(),xi.ravel())
 fs = RegularGridInterpolator(points,wrf_temp,method=interp_method)
 ground_comp_speed = fs(Xi)
+
+[yi,ti,xi] = np.meshgrid(uk_stat_pos_m[1],time,uk_stat_pos_m[0])
+Xi = (ti.ravel(),yi.ravel(),xi.ravel())
+fs = RegularGridInterpolator(points,wrf_temp,method=interp_method)
+uk_comp_speed = fs(Xi)
 
 ground_data = pd.read_csv('Ground5_MetData.txt', delim_whitespace=True,header=1,names=['date','time','wind_speed','wind_dir','temp'])
 seconds = []
@@ -113,6 +119,15 @@ for t in range(MURC_data.shape[0]):
 MURC_sec = [x/3600 for x in seconds]
 MURC_speed = MURC_data['temperature']
 
+uk_data = pd.read_csv('UK_station.csv', delim_whitespace=False,header=0,names=['date-time','u','v','w','temp'])
+seconds = []
+for t in range(uk_data.shape[0]):
+    hrs_in_sec = int(uk_data['date-time'][t][12:14])*3600
+    min_in_sec = int(uk_data['date-time'][t][15:17])*60
+    sec = int(uk_data['date-time'][t][18:20])
+    seconds.append(hrs_in_sec+min_in_sec+sec)
+uk_speed = uk_data['temp']
+uk_sec = [x/3600 for x in seconds]
 
 ross_speed=[]
 ross_sec=[]
@@ -145,27 +160,37 @@ height = 15
 width = height*1.61803398875
 plt.close('all')
 plt.figure(1,figsize=(width,height))
-plt.subplot(411)
+plt.subplot(511)
 plt.plot(time,ground_comp_speed)
 plt.plot(ground_sec,ground_speed)
 plt.title('Temperature from WRF overlaid with temperature from ground')
 #plt.xlabel('Hours since 0000hrs Mountain Time, 2018-07-17')
 plt.ylabel('degrees C')
 plt.xlim([12,16])
-plt.ylim([20,28])
+plt.ylim([17,30])
 plt.xticks([])
 
-plt.subplot(412)
+plt.subplot(512)
 plt.plot(time,ground_comp_speed)
 plt.plot(MURC_sec,MURC_speed)
 plt.title('Temperature from WRF overlaid with temperature from MURC')
 #plt.xlabel('Hours since 0000hrs Mountain Time, 2018-07-17')
 plt.ylabel('degrees C')
 plt.xlim([12,16])
-plt.ylim([20,28])
+plt.ylim([17,30])
 plt.xticks([])
 
-plt.subplot(413)
+plt.subplot(513)
+plt.plot(time,uk_comp_speed)
+plt.plot(uk_sec,uk_speed)
+plt.title('Temperature from WRF overlaid with temperature from UK Station')
+#plt.xlabel('Hours since 0000hrs Mountain Time, 2018-07-17')
+plt.ylabel('degrees C')
+plt.xlim([12,16])
+plt.ylim([17,30])
+plt.xticks([])
+
+plt.subplot(514)
 plt.plot(time,ross_comp_speed)
 for x,y in zip(ross_sec,ross_speed):
     x=[element/3600 for element in x]
@@ -173,10 +198,10 @@ for x,y in zip(ross_sec,ross_speed):
 plt.title('Temperature from WRF overlaid with temperature from Ross flights')
 plt.ylabel('degrees C')
 plt.xlim([12,16])
-plt.ylim([20,28])
+plt.ylim([17,30])
 plt.xticks([])
 
-plt.subplot(414)
+plt.subplot(515)
 plt.plot(time,schmale_comp_speed)
 for x,y in zip(schmale_sec,schmale_speed):
     x=[element/3600 for element in x]
@@ -184,7 +209,8 @@ for x,y in zip(schmale_sec,schmale_speed):
 plt.title('Temperature from WRF overlaid with temperature from schmale flights')
 plt.ylabel('degrees C')
 plt.xlim([12,16])
-plt.ylim([20,28])
+plt.ylim([17,30])
 plt.xlabel('Hours since 0000hrs Mountain Time, 2018-07-17')
-plt.savefig('temperature_comparison_colorado_campaign_WRF_2018-07-17_wrf=30m.png', transparent=False, bbox_inches='tight',pad_inches=0)
+height=[2,30]
+plt.savefig('temperature_comparison_colorado_campaign_WRF_2018-07-17_wrf={0:d}m.png'.format(height[height_level]), transparent=False, bbox_inches='tight',pad_inches=0)
 

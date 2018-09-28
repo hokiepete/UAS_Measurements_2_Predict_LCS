@@ -31,6 +31,9 @@ y = vars['y0'][:]*1000
 z = vars['z1'][:]*1000
 lon = vars['lon0'][:]
 lat = vars['lat0'][:]
+
+import sys
+sys.exit()
 proj_center_lon = getattr(vars['grid_mapping_0'],'longitude_of_projection_origin')
 proj_center_lat = getattr(vars['grid_mapping_0'],'latitude_of_projection_origin')
 time[tt] = vars['time'][:]
@@ -41,7 +44,7 @@ fu = RegularGridInterpolator(points,vars['UGRD_HTGL'][:].squeeze(),method=interp
 u[tt,:,:] = fu(Xi).reshape([ydim,xdim])
 fv = RegularGridInterpolator(points,vars['VGRD_HTGL'][:].squeeze(),method=interp_method)
 v[tt,:,:] = fv(Xi).reshape([ydim,xdim])
-
+root.close()
 
 for tt in range(1,len(files)):
     print(tt)
@@ -53,6 +56,7 @@ for tt in range(1,len(files)):
     u[tt,:,:] = fu(Xi).reshape([ydim,xdim])
     fv = RegularGridInterpolator(points,vars['VGRD_HTGL'][:].squeeze(),method=interp_method)
     v[tt,:,:] = fv(Xi).reshape([ydim,xdim])
+    root.close()
 
     
 print('save')

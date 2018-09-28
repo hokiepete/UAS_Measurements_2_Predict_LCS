@@ -1,0 +1,10 @@
+Files contain timeseries for grid points that form a plus sign centered on Leach Airport in the San Luis Valley
+of Colorado. Grid resolution is 111.11 m. Output is stored at the model domain time step resolution, which is
+0.667 sec for d02. The file naming convention is as follows:
+LAI - grid point closest to Leach Airfield - this point is located at the center of the plus sign.
+LEn - points due east of LAI where 'n' is the number of grid point from the center point
+LWn - points due west of LAI
+LSn - points due south of LAI
+LNn - points due north of LAI
+
+See the README.lslist file for a complete description of the contents of each file.

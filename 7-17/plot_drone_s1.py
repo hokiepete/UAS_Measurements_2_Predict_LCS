@@ -12,7 +12,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 plt.close('all')
-ground = [-106.03917,37.781644]
+ground = [-106.041504,37.782005]
 
 
 ross_lon = [-106.04076,-106.040763,-106.040762,-106.040762]
@@ -22,7 +22,20 @@ schmale_lon = [-106.0422848,-106.0422905,-106.0422956,-106.0422941]
 schmale_lat = [37.78153018,37.78155617,37.78156052,37.78156436]
 #(ross, schmale)
 paired_flights = [(22,9),(23,10),(25,11),(26,12)]
+rossx = np.mean(ross_lon)
+rossy = np.mean(ross_lat)
+schmalex = np.mean(schmale_lon)
+schmaley = np.mean(schmale_lat)
+lon = np.mean(schmale_lon+ross_lon+[ground[0]])
+lat = np.mean(schmale_lat+ross_lat+[ground[1]])
+plt.scatter(rossx,rossy,color='cyan')
+plt.scatter(schmalex,schmaley,color='blue')
+plt.scatter(ground[0],ground[1],color='brown')
+plt.scatter(ground[0],schmaley,color='red')
+plt.scatter(lon,lat,color='magenta')
 
+import sys
+sys.exit()
 s1=[]
 plt_sec=[]
 for i, pair in enumerate(paired_flights):

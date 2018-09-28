@@ -26,6 +26,7 @@ proj_center_lon = F['proj_center_lon']
 proj_center_lat = F['proj_center_lat']
 s1_wrf = F['s1']
 F.close()
+
 ground5 = [-106.041504,37.782005]
 ground = ground5
 
@@ -40,6 +41,8 @@ paired_flights = [(22,9),(23,10),(25,11),(26,12)]
 ground_m = f.lonlat2m(proj_center_lon,proj_center_lat,ground[0],ground[1])
 ross_pos_m = f.lonlat2m(proj_center_lon,proj_center_lat,ross_lon,ross_lat)
 schmale_pos_m = f.lonlat2m(proj_center_lon,proj_center_lat,schmale_lon,schmale_lat)
+#point_pos_m = f.lonlat2m(proj_center_lon,proj_center_lat,point_pos[0],point_pos[1])
+
 dx = ground_m[0] - schmale_pos_m[0]
 dy = ground_m[1] - schmale_pos_m[1]
 points = (wrf_time,y,x)
@@ -133,6 +136,7 @@ height = 8
 width = height*1.61803398875
 plt.close('all')
 plt.figure(1,figsize=(width,height))
+plt.subplot(211)
 plt.plot(wrf_time,s1_plot,linewidth=3)
 for x,y in zip(plt_sec,s1):
     x=[element/3600 for element in x]
