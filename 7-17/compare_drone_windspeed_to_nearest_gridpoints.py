@@ -14,6 +14,15 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from time import gmtime
+import matplotlib
+matplotlib.rcParams['text.usetex']=True
+matplotlib.rcParams['mathtext.fontset'] = 'cm'
+plt.rc('font', **{'family': 'serif', 'serif': ['cmr10']})
+
+titlefont = {'fontsize':10}
+labelfont = {'fontsize':10}
+tickfont = {'fontsize':8}
+
 plt.close('all')
 files = listdir('wrf_les/')
 interp_method = 'nearest'
@@ -166,60 +175,67 @@ for i, pair in enumerate(paired_flights):
 
     
 
-height = 15
-width = height*1.61803398875
+height = 8.5
+width = 6
+#width = height*1.61803398875
 plt.close('all')
 plt.figure(1,figsize=(width,height))
 plt.subplot(511)
-plt.plot(time,ground_comp_speed)
-plt.plot(ground_sec,ground_speed)
-plt.title('Wind speed from WRF overlaid with temperature from ground')
+plt.plot(ground_sec,ground_speed,color='orange')
+plt.plot(time,ground_comp_speed,color='blue')
+plt.title('Wind speed from Ground overlaid with wind speed from WRF',**titlefont,y=0.96)
 #plt.xlabel('Hours since 0000hrs Mountain Time, 2018-07-17')
-plt.ylabel('m/s')
+plt.ylabel('m/s',**labelfont)
 plt.xlim([12,16])
 plt.ylim([0,10])
+plt.yticks(**tickfont)
 plt.xticks([])
 
 plt.subplot(512)
-plt.plot(time,ground_comp_speed)
-plt.plot(MURC_sec,MURC_speed)
-plt.title('Wind speed from WRF overlaid with temperature from MURC')
+plt.plot(MURC_sec,MURC_speed,color='orange')
+plt.plot(time,ground_comp_speed,color='blue')
+plt.title('Wind speed from MURC overlaid with wind speed from WRF',**titlefont,y=0.96)
 #plt.xlabel('Hours since 0000hrs Mountain Time, 2018-07-17')
-plt.ylabel('m/s')
+plt.ylabel('m/s',**labelfont)
 plt.xlim([12,16])
 plt.ylim([0,10])
+plt.yticks(**tickfont)
 plt.xticks([])
 
 plt.subplot(513)
-plt.plot(time,uk_comp_speed)
-plt.plot(uk_sec,uk_speed)
-plt.title('Wind speed from WRF overlaid with temperature from UK Station')
+plt.plot(uk_sec,uk_speed,color='orange')
+plt.plot(time,uk_comp_speed,color='blue')
+plt.title('Wind speed from UK sonic overlaid with wind speed from WRF',**titlefont,y=0.96)
 #plt.xlabel('Hours since 0000hrs Mountain Time, 2018-07-17')
-plt.ylabel('m/s')
+plt.ylabel('m/s',**labelfont)
 plt.xlim([12,16])
 plt.ylim([0,10])
+plt.yticks(**tickfont)
 plt.xticks([])
 
 plt.subplot(514)
-plt.plot(time,ross_comp_speed)
+plt.plot(time,ross_comp_speed,color='blue')
 for x,y in zip(ross_sec,ross_speed):
     x=[element/3600 for element in x]
     plt.plot(x,y)
-plt.title('Wind speed from WRF overlaid with temperature from Ross flights')
-plt.ylabel('m/s')
+plt.title('Wind speed from WRF overlaid with wind speed from ``Ross" flights',**titlefont,y=0.96)
+plt.ylabel('m/s',**labelfont)
 plt.xlim([12,16])
 plt.ylim([0,10])
+plt.yticks(**tickfont)
 plt.xticks([])
 
 plt.subplot(515)
-plt.plot(time,schmale_comp_speed)
+plt.plot(time,schmale_comp_speed,color='blue')
 for x,y in zip(schmale_sec,schmale_speed):
     x=[element/3600 for element in x]
     plt.plot(x,y)
-plt.title('Wind speed from WRF overlaid with temperature from schmale flights')
-plt.ylabel('m/s')
+plt.title('Wind speed from WRF overlaid with wind speed from ``Schmale" flights',**titlefont,y=0.96)
+plt.ylabel('m/s',**labelfont)
 plt.xlim([12,16])
 plt.ylim([0,10])
-plt.xlabel('Hours since 0000hrs Mountain Time, 2018-07-17')
+plt.yticks(**tickfont)
+plt.xticks(**tickfont)
+plt.xlabel('Hours since 0000hrs Mountain Time, 2018-07-17',**labelfont)
 
-plt.savefig('speed_comparison_colorado_campaign_WRF_2018-07-17.png', transparent=False, bbox_inches='tight',pad_inches=0)
+plt.savefig('speed_comparison_colorado_campaign_WRF_2018-07-17.png', transparent=False, bbox_inches='tight',pad_inches=0.02,dpi=300)

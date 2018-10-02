@@ -14,6 +14,14 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from time import gmtime
+import matplotlib
+matplotlib.rcParams['text.usetex']=True
+matplotlib.rcParams['mathtext.fontset'] = 'cm'
+plt.rc('font', **{'family': 'serif', 'serif': ['cmr10']})
+
+titlefont = {'fontsize':10}
+labelfont = {'fontsize':10}
+tickfont = {'fontsize':8}
 plt.close('all')
 files = listdir('wrf_les/')
 interp_method = 'nearest'
@@ -21,7 +29,7 @@ interp_method = 'nearest'
 xdim = 1008
 ydim = 882
 zdim = 20
-height_level = 0
+height_level = 1
 tdim = len(files)
 time = np.empty([tdim])
 wrf_temp = np.empty([tdim,ydim,xdim])
@@ -36,6 +44,7 @@ y = vars['y0'][:]*1000
 #z = vars['z3'][:]*1000
 lon = vars['lon0'][:]
 lat = vars['lat0'][:]
+height_in = vars['z3'][:]*1000
 proj_center_lon = getattr(vars['grid_mapping_0'],'longitude_of_projection_origin')
 proj_center_lat = getattr(vars['grid_mapping_0'],'latitude_of_projection_origin')
 time[tt] = vars['time'][:]
@@ -153,64 +162,69 @@ for i, pair in enumerate(paired_flights):
         seconds.append(hrs_in_sec+min_in_sec+sec)
     schmale_speed.append(schmale_data['temp'])
     schmale_sec.append(seconds)
-
     
-
-height = 15
-width = height*1.61803398875
+height = 8.5
+width = 6
+#height = 15
+#width = height*1.61803398875
 plt.close('all')
 plt.figure(1,figsize=(width,height))
 plt.subplot(511)
-plt.plot(time,ground_comp_speed)
-plt.plot(ground_sec,ground_speed)
-plt.title('Temperature from WRF overlaid with temperature from ground')
+plt.plot(ground_sec,ground_speed,color='orange')
+plt.plot(time,ground_comp_speed,color='blue')
+plt.title('Temperature from ground overlaid with temperature from WRF',**titlefont,y=0.96)
 #plt.xlabel('Hours since 0000hrs Mountain Time, 2018-07-17')
-plt.ylabel('degrees C')
+plt.ylabel('$^{\circ}$C',**labelfont)
 plt.xlim([12,16])
 plt.ylim([17,30])
+plt.yticks(**tickfont)
 plt.xticks([])
 
 plt.subplot(512)
-plt.plot(time,ground_comp_speed)
-plt.plot(MURC_sec,MURC_speed)
-plt.title('Temperature from WRF overlaid with temperature from MURC')
+plt.plot(MURC_sec,MURC_speed,color='orange')
+plt.plot(time,ground_comp_speed,color='blue')
+plt.title('Temperature from MURC overlaid with temperature from WRF',**titlefont,y=0.96)
 #plt.xlabel('Hours since 0000hrs Mountain Time, 2018-07-17')
-plt.ylabel('degrees C')
+plt.ylabel('$^{\circ}$C',**labelfont)
 plt.xlim([12,16])
 plt.ylim([17,30])
+plt.yticks(**tickfont)
 plt.xticks([])
 
 plt.subplot(513)
-plt.plot(time,uk_comp_speed)
-plt.plot(uk_sec,uk_speed)
-plt.title('Temperature from WRF overlaid with temperature from UK Station')
+plt.plot(uk_sec,uk_speed,color='orange')
+plt.plot(time,uk_comp_speed,color='blue')
+plt.title('Temperature from UK sonic overlaid with temperature from WRF',**titlefont,y=0.96)
 #plt.xlabel('Hours since 0000hrs Mountain Time, 2018-07-17')
-plt.ylabel('degrees C')
+plt.ylabel('$^{\circ}$C',**labelfont)
 plt.xlim([12,16])
 plt.ylim([17,30])
+plt.yticks(**tickfont)
 plt.xticks([])
 
 plt.subplot(514)
-plt.plot(time,ross_comp_speed)
+plt.plot(time,ross_comp_speed,color='blue')
 for x,y in zip(ross_sec,ross_speed):
     x=[element/3600 for element in x]
     plt.plot(x,y)
-plt.title('Temperature from WRF overlaid with temperature from Ross flights')
-plt.ylabel('degrees C')
+plt.title('Temperature from WRF overlaid with temperature from Ross flights',**titlefont,y=0.96)
+plt.ylabel('$^{\circ}$C',**labelfont)
 plt.xlim([12,16])
 plt.ylim([17,30])
+plt.yticks(**tickfont)
 plt.xticks([])
 
 plt.subplot(515)
-plt.plot(time,schmale_comp_speed)
+plt.plot(time,schmale_comp_speed,color='blue')
 for x,y in zip(schmale_sec,schmale_speed):
     x=[element/3600 for element in x]
     plt.plot(x,y)
-plt.title('Temperature from WRF overlaid with temperature from schmale flights')
-plt.ylabel('degrees C')
+plt.title('Temperature from WRF overlaid with temperature from schmale flights',**titlefont,y=0.96)
+plt.ylabel('$^{\circ}$C',**labelfont)
 plt.xlim([12,16])
 plt.ylim([17,30])
-plt.xlabel('Hours since 0000hrs Mountain Time, 2018-07-17')
-height=[2,30]
-plt.savefig('temperature_comparison_colorado_campaign_WRF_2018-07-17_wrf={0:d}m.png'.format(height[height_level]), transparent=False, bbox_inches='tight',pad_inches=0)
+plt.yticks(**tickfont)
+plt.xticks(**tickfont)
+plt.xlabel('Hours since 0000hrs Mountain Time, 2018-07-17',**labelfont)
+plt.savefig('temperature_comparison_colorado_campaign_WRF_2018-07-17_wrf={0:02d}m.png'.format(int(height_in[height_level])), transparent=False, bbox_inches='tight',pad_inches=0.02,dpi=300)
 

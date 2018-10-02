@@ -43,7 +43,7 @@ for tt in {10}:#range(tdim):
     
 
 #np.savez('wrf_les_s1_4_animation0.npz',s1=s1,time=time,x=x,y=y,lon=lon,lat=lat,proj_center_lon=proj_center_lon,proj_center_lat=proj_center_lat)        
-#np.savez('wrf_les_s1.npz',s1=s1,time=time,x=x,y=y,lon=lon,lat=lat,proj_center_lon=proj_center_lon,proj_center_lat=proj_center_lat)        
+np.savez('wrf_les_s1.npz',s1=s1,time=time,x=x,y=y,lon=lon,lat=lat,proj_center_lon=proj_center_lon,proj_center_lat=proj_center_lat)        
 
 
 
