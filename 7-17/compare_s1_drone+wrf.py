@@ -13,6 +13,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 #import time as t_func
 from time import gmtime
+import matplotlib
+matplotlib.rcParams['text.usetex']=True
+matplotlib.rcParams['mathtext.fontset'] = 'cm'
+plt.rc('font', **{'family': 'serif', 'serif': ['cmr10']})
+titlefont = {'fontsize':10}
+labelfont = {'fontsize':10}
+tickfont = {'fontsize':8}
 plt.close('all')
 
 F = np.load('wrf_les_s1.npz')
@@ -24,12 +31,12 @@ tf = gmtime(wrf_time[-1]).tm_hour-6
 wrf_time = np.linspace(t0,tf,wrf_time.shape[0])
 proj_center_lon = F['proj_center_lon']
 proj_center_lat = F['proj_center_lat']
-s1_wrf = F['s1']
+s1_wrf = 3600*F['s1']
 F.close()
 
 F = np.load('point_s1.npz')
 point_pos = F['pos']
-point_s1 = F['s1']
+point_s1 = 3600*F['s1']
 point_time = F['time']
 F.close()
 
@@ -146,14 +153,14 @@ for i, pair in enumerate(paired_flights):
         J = np.array([[dudx,dudy],[dvdx,dvdy]])
         S = 0.5*(J+J.T)
         plt_sec_temp.append(ground_data.iloc[t]['time'])
-        s1_temp.append(np.linalg.eig(S)[0].min())
+        s1_temp.append(3600*np.linalg.eig(S)[0].min())
     
     plt_sec.append(plt_sec_temp)
     s1.append(s1_temp)
     
 
-height = 15
-width = height*1.61803398875
+height = 8.5
+width = 6
 
 plt.figure(1,figsize=(width,height))
 
@@ -162,11 +169,12 @@ plt.plot(wrf_time,s1_plot)
 for x,y in zip(plt_sec,s1):
     x=[element/3600 for element in x]
     plt.plot(x,y)
-plt.title('s$_{1}$ linearly interpolated from WRF overlaid with s$_{1}$ from drone flights')
-plt.ylabel('s$^{-1}$')
+plt.title('s$_{1}$ linearly interpolated from WRF overlaid with s$_{1}$ from drone flights',**titlefont,y=0.96)
+plt.ylabel('hr$^{-1}$',**labelfont)
 plt.xlim([12,16])
-plt.ylim([-0.08,0.02])
+plt.ylim([-288,72])
 plt.xticks([])
+plt.yticks(**tickfont)
 #plt.xlabel('Housrs since 0000hrs Mountain Time, 2018-07-17')
 
 plt.subplot(512)
@@ -174,43 +182,48 @@ plt.plot(wrf_time,schmale_s1_plot)
 for x,y in zip(plt_sec,s1):
     x=[element/3600 for element in x]
     plt.plot(x,y)
-plt.title('s$_{1}$ from WRF nearest Schmale drone overlaid with s$_{1}$ from drone flights')
-plt.ylabel('s$^{-1}$')
+plt.title('s$_{1}$ from WRF nearest Schmale drone overlaid with s$_{1}$ from drone flights',**titlefont,y=0.96)
+plt.ylabel('hr$^{-1}$',**labelfont)
 plt.xlim([12,16])
-plt.ylim([-0.08,0.02])
+plt.ylim([-288,72])
 plt.xticks([])
+plt.yticks(**tickfont)
 
 plt.subplot(513)
 plt.plot(wrf_time,ross_s1_plot)
 for x,y in zip(plt_sec,s1):
     x=[element/3600 for element in x]
     plt.plot(x,y)
-plt.title('s$_{1}$ from WRF nearest Ross drone overlaid with s$_{1}$ from drone flights')
-plt.ylabel('s$^{-1}$')
-plt.ylim([-0.08,0.02])
+plt.title('s$_{1}$ from WRF nearest Ross drone overlaid with s$_{1}$ from drone flights',**titlefont,y=0.96)
+plt.ylabel('hr$^{-1}$',**labelfont)
+plt.ylim([-288,72])
 plt.xlim([12,16])
 plt.xticks([])
+plt.yticks(**tickfont)
 
 plt.subplot(514)
 plt.plot(wrf_time,ground_s1_plot)
 for x,y in zip(plt_sec,s1):
     x=[element/3600 for element in x]
     plt.plot(x,y)
-plt.title('s$_{1}$ from WRF nearest MURC overlaid with s$_{1}$ from drone flights')
-plt.ylim([-0.08,0.02])
+plt.title('s$_{1}$ from WRF nearest MURC overlaid with s$_{1}$ from drone flights',**titlefont,y=0.96)
+plt.ylim([-288,72])
 plt.xlim([12,16])
-plt.ylabel('s$^{-1}$')
+plt.ylabel('hr$^{-1}$',**labelfont)
 plt.xticks([])
+plt.yticks(**tickfont)
 
 plt.subplot(515)
 plt.plot(point_time,point_s1)
 for x,y in zip(plt_sec,s1):
     x=[element/3600 for element in x]
     plt.plot(x,y)
-plt.title('s$_{1}$ from WRF Time Series overlaid with s$_{1}$ from drone flights')
-plt.ylim([-0.08,0.02])
+plt.title('s$_{1}$ from WRF TS overlaid with s$_{1}$ from drone flights',**titlefont,y=0.96)
+plt.ylim([-288,72])
 plt.xlim([12,16])
-plt.ylabel('s$^{-1}$')
-plt.xlabel('Housrs since 0000hrs Mountain Time, 2018-07-17')
+plt.ylabel('hr$^{-1}$',**labelfont)
+plt.yticks(**tickfont)
+plt.xticks([12,13,14,15,16],**tickfont)
+plt.xlabel('Hours since 0000hrs Mountain Time, 2018-07-17',**labelfont)
 
-plt.savefig('s1_comparison_colorado_campaign_WRF_2018-07-17.png', transparent=False, bbox_inches='tight',pad_inches=0)
+plt.savefig('s1_comparison_colorado_campaign_WRF_2018-07-17.png', transparent=False, bbox_inches='tight',pad_inches=0.02,dpi=300)
