@@ -33,31 +33,45 @@ proj_center_lon = F['proj_center_lon']
 proj_center_lat = F['proj_center_lat']
 s1_wrf = 3600*F['s1']
 F.close()
-
+'''
 F = np.load('point_s1.npz')
 point_pos = F['pos']
 point_s1 = 3600*F['s1']
 point_time = F['time']
 F.close()
-
+'''
+ground2 = [-106.03917,37.781644]
 ground5 = [-106.041504,37.782005]
-ground = ground5
+ground = ground2
 
-ross_lon = np.mean([-106.04076,-106.040763,-106.040762,-106.040762])
-ross_lat = np.mean([37.780287,37.780307,37.780398,37.780338])
+ross_lon = np.mean([-106.040772,-106.040763])
+ross_lat = np.mean([37.780315,37.780312])
 
-schmale_lon = np.mean([-106.0422848,-106.0422905,-106.0422956,-106.0422941])
-schmale_lat = np.mean([37.78153018,37.78155617,37.78156052,37.78156436])
+
+schmale_lon = np.mean([-106.0422978,-106.0422984])
+schmale_lat = np.mean([37.78155488	,37.7815583])
+
 #(ross, schmale)
-paired_flights = [(22,9),(23,10),(25,11),(26,12)]
+paired_flights = [(4,4),(5,5)]
+plt.scatter(ground[0],ground[1],color='brown')
+plt.scatter(ross_lon,ross_lat,color='blue')
+plt.scatter(schmale_lon,schmale_lat,color='red')
 
+'''
+plt.scatter(ground[0],ground[1],color='brown')
+plt.scatter(ross_lon[0],ross_lat[0],color='blue')
+plt.scatter(ross_lon[1],ross_lat[1],color='blue')
+plt.scatter(schmale_lon[0],schmale_lat[0],color='red')
+plt.scatter(schmale_lon[1],schmale_lat[1],color='red')
+'''
 ground_m = f.lonlat2m(proj_center_lon,proj_center_lat,ground[0],ground[1])
 ross_pos_m = f.lonlat2m(proj_center_lon,proj_center_lat,ross_lon,ross_lat)
 schmale_pos_m = f.lonlat2m(proj_center_lon,proj_center_lat,schmale_lon,schmale_lat)
-dx = ground_m[0] - schmale_pos_m[0]
-dy = ground_m[1] - schmale_pos_m[1]
+dx = ross_pos_m[0] - schmale_pos_m[0]
+dy = schmale_pos_m[1] - ross_pos_m[1]
+
 points = (wrf_time,y,x)
-[yi,zi,xi] = np.meshgrid(schmale_pos_m[1],wrf_time,ground_m[0])
+[yi,zi,xi] = np.meshgrid(schmale_pos_m[1],wrf_time,ross_pos_m[0])
 Xi = (zi.ravel(),yi.ravel(),xi.ravel())
 fs1 = RegularGridInterpolator(points,s1_wrf)
 s1_plot = fs1(Xi)
@@ -102,7 +116,7 @@ for i, pair in enumerate(paired_flights):
         seconds.append(hrs_in_sec+min_in_sec+sec)
     schmale_data['time'] = seconds
 
-    ground_data = pd.read_csv('Ground5_MetData.txt', delim_whitespace=True,header=1,names=['date','time','wind_speed','wind_dir','temp'])
+    ground_data = pd.read_csv('Ground2_MetData.txt', delim_whitespace=True,header=1,names=['date','time','wind_speed','wind_dir','temp'])
     seconds = []
     for t in range(ground_data.shape[0]):
         hrs_in_sec = int(ground_data['time'][t][0:2])*3600
@@ -132,23 +146,26 @@ for i, pair in enumerate(paired_flights):
             print('ERROR: Sample Time Inequal @ {0}'.format(t))
             break
         values = [ross_data.iloc[t]['wind_speed'],schmale_data.iloc[t]['wind_speed'],ground_data.iloc[t]['wind_speed']]
-        wind_speed = griddata(points,values,(ground_m[0],schmale_pos_m[1]),method='cubic')
+        wind_speed = griddata(points,values,(ross_pos_m[0],schmale_pos_m[1]),method='cubic')
         values = [ross_data.iloc[t]['wind_dir'],schmale_data.iloc[t]['wind_dir'],ground_data.iloc[t]['wind_dir']]
-        wind_dir = griddata(points,values,(ground_m[0],schmale_pos_m[1]),method='cubic')
+        wind_dir = griddata(points,values,(ross_pos_m[0],schmale_pos_m[1]),method='cubic')
 
         u = -wind_speed*np.sin(f.deg2rad(wind_dir))
         v = wind_speed*np.cos(f.deg2rad(wind_dir))
 
         u_schmale = -schmale_data.iloc[t]['wind_speed']*np.sin(f.deg2rad(schmale_data.iloc[t]['wind_dir']))
         v_schmale = schmale_data.iloc[t]['wind_speed']*np.cos(f.deg2rad(schmale_data.iloc[t]['wind_dir']))
+        
+        u_ross = -ross_data.iloc[t]['wind_speed']*np.sin(f.deg2rad(ross_data.iloc[t]['wind_dir']))
+        v_ross = ross_data.iloc[t]['wind_speed']*np.cos(f.deg2rad(ross_data.iloc[t]['wind_dir']))
 
         u_ground = -ground_data.iloc[t]['wind_speed']*np.sin(f.deg2rad(ground_data.iloc[t]['wind_dir']))
         v_ground = ground_data.iloc[t]['wind_speed']*np.cos(f.deg2rad(ground_data.iloc[t]['wind_dir']))
 
         dudx = (u-u_schmale)/dx
-        dudy = (u_ground-u)/dy
+        dudy = (u-u_ross)/dy
         dvdx = (v-v_schmale)/dx
-        dvdy = (v_ground-v)/dy
+        dvdy = (v-v_ross)/dy
         
         J = np.array([[dudx,dudy],[dvdx,dvdy]])
         S = 0.5*(J+J.T)
@@ -164,32 +181,32 @@ width = 6
 
 plt.figure(1,figsize=(width,height))
 
-plt.subplot(511)
+plt.subplot(411)
 plt.plot(wrf_time,s1_plot)
 for x,y in zip(plt_sec,s1):
     x=[element/3600 for element in x]
     plt.plot(x,y)
 plt.title('s$_{1}$ linearly interpolated from WRF overlaid with s$_{1}$ from drone flights',**titlefont,y=0.96)
 plt.ylabel('hr$^{-1}$',**labelfont)
-plt.xlim([12,16])
+#plt.xlim([12,16])
 plt.ylim([-288,72])
 plt.xticks([])
 plt.yticks(**tickfont)
 #plt.xlabel('Housrs since 0000hrs Mountain Time, 2018-07-17')
 
-plt.subplot(512)
+plt.subplot(412)
 plt.plot(wrf_time,schmale_s1_plot)
 for x,y in zip(plt_sec,s1):
     x=[element/3600 for element in x]
     plt.plot(x,y)
 plt.title('s$_{1}$ from WRF nearest Schmale drone overlaid with s$_{1}$ from drone flights',**titlefont,y=0.96)
 plt.ylabel('hr$^{-1}$',**labelfont)
-plt.xlim([12,16])
+#plt.xlim([12,16])
 plt.ylim([-288,72])
 plt.xticks([])
 plt.yticks(**tickfont)
 
-plt.subplot(513)
+plt.subplot(413)
 plt.plot(wrf_time,ross_s1_plot)
 for x,y in zip(plt_sec,s1):
     x=[element/3600 for element in x]
@@ -197,22 +214,22 @@ for x,y in zip(plt_sec,s1):
 plt.title('s$_{1}$ from WRF nearest Ross drone overlaid with s$_{1}$ from drone flights',**titlefont,y=0.96)
 plt.ylabel('hr$^{-1}$',**labelfont)
 plt.ylim([-288,72])
-plt.xlim([12,16])
+#plt.xlim([12,16])
 plt.xticks([])
 plt.yticks(**tickfont)
 
-plt.subplot(514)
+plt.subplot(414)
 plt.plot(wrf_time,ground_s1_plot)
 for x,y in zip(plt_sec,s1):
     x=[element/3600 for element in x]
     plt.plot(x,y)
 plt.title('s$_{1}$ from WRF nearest MURC overlaid with s$_{1}$ from drone flights',**titlefont,y=0.96)
 plt.ylim([-288,72])
-plt.xlim([12,16])
+#plt.xlim([12,16])
 plt.ylabel('hr$^{-1}$',**labelfont)
-plt.xticks([])
+plt.xticks(**tickfont)
 plt.yticks(**tickfont)
-
+'''
 plt.subplot(515)
 plt.plot(point_time,point_s1)
 for x,y in zip(plt_sec,s1):
@@ -225,5 +242,5 @@ plt.ylabel('hr$^{-1}$',**labelfont)
 plt.yticks(**tickfont)
 plt.xticks([12,13,14,15,16],**tickfont)
 plt.xlabel('Hours since 0000hrs Mountain Time, 2018-07-17',**labelfont)
-
-plt.savefig('s1_comparison_colorado_campaign_WRF_2018-07-17.png', transparent=False, bbox_inches='tight',pad_inches=0.02,dpi=300)
+'''
+plt.savefig('s1_comparison_colorado_campaign_WRF_2018-07-14.png', transparent=False, bbox_inches='tight',pad_inches=0.02,dpi=300)

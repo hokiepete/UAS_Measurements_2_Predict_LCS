@@ -9,8 +9,9 @@ import numpy as np
 
 dx = 111
 dy = 111
-#F = np.load('wrf_les.npz')
-F = np.load('wrf_les_4_animation0.npz')
+F = np.load('wrf_les.npz')
+
+#F = np.load('wrf_les_4_animation0.npz')
 x = F['x']
 y = F['y']
 time = F['time']
@@ -27,7 +28,7 @@ xdim = x.shape[0]
 ydim = y.shape[0]
 
 s1 = np.ma.empty([tdim,ydim,xdim])
-for tt in {10}:#range(tdim):
+for tt in range(tdim):
     print(tt)
     dudy,dudx = np.gradient(u[tt,:,:],dy,dx,edge_order=2)
     dvdy,dvdx = np.gradient(v[tt,:,:],dy,dx,edge_order=2)

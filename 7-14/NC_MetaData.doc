@@ -1,0 +1,250 @@
+---------- variable time, file f_00050400.mdv.nc ----------
+shape = (1,)
+dimension[time] = 1
+number of attributes = 6
+attribute[standard_name] = time
+attribute[long_name] = Data time
+attribute[units] = seconds since 1970-01-01T00:00:00Z
+attribute[axis] = T
+attribute[bounds] = time_bounds
+attribute[comment] = 2018-07-14T18:00:00Z
+---------- variable time, file f_00051000.mdv.nc ----------
+shape = (1,)
+dimension[time] = 1
+number of attributes = 6
+attribute[standard_name] = time
+attribute[long_name] = Data time
+attribute[units] = seconds since 1970-01-01T00:00:00Z
+attribute[axis] = T
+attribute[bounds] = time_bounds
+attribute[comment] = 2018-07-14T18:10:00Z
+---------- variable time, file f_00051600.mdv.nc ----------
+shape = (1,)
+dimension[time] = 1
+number of attributes = 6
+attribute[standard_name] = time
+attribute[long_name] = Data time
+attribute[units] = seconds since 1970-01-01T00:00:00Z
+attribute[axis] = T
+attribute[bounds] = time_bounds
+attribute[comment] = 2018-07-14T18:20:00Z
+---------- variable time, file f_00052200.mdv.nc ----------
+shape = (1,)
+dimension[time] = 1
+number of attributes = 6
+attribute[standard_name] = time
+attribute[long_name] = Data time
+attribute[units] = seconds since 1970-01-01T00:00:00Z
+attribute[axis] = T
+attribute[bounds] = time_bounds
+attribute[comment] = 2018-07-14T18:30:00Z
+---------- variable time, file f_00052800.mdv.nc ----------
+shape = (1,)
+dimension[time] = 1
+number of attributes = 6
+attribute[standard_name] = time
+attribute[long_name] = Data time
+attribute[units] = seconds since 1970-01-01T00:00:00Z
+attribute[axis] = T
+attribute[bounds] = time_bounds
+attribute[comment] = 2018-07-14T18:40:00Z
+---------- variable time, file f_00053400.mdv.nc ----------
+shape = (1,)
+dimension[time] = 1
+number of attributes = 6
+attribute[standard_name] = time
+attribute[long_name] = Data time
+attribute[units] = seconds since 1970-01-01T00:00:00Z
+attribute[axis] = T
+attribute[bounds] = time_bounds
+attribute[comment] = 2018-07-14T18:50:00Z
+---------- variable time, file f_00054000.mdv.nc ----------
+shape = (1,)
+dimension[time] = 1
+number of attributes = 6
+attribute[standard_name] = time
+attribute[long_name] = Data time
+attribute[units] = seconds since 1970-01-01T00:00:00Z
+attribute[axis] = T
+attribute[bounds] = time_bounds
+attribute[comment] = 2018-07-14T19:00:00Z
+---------- variable time, file f_00054600.mdv.nc ----------
+shape = (1,)
+dimension[time] = 1
+number of attributes = 6
+attribute[standard_name] = time
+attribute[long_name] = Data time
+attribute[units] = seconds since 1970-01-01T00:00:00Z
+attribute[axis] = T
+attribute[bounds] = time_bounds
+attribute[comment] = 2018-07-14T19:10:00Z
+---------- variable time, file f_00055200.mdv.nc ----------
+shape = (1,)
+dimension[time] = 1
+number of attributes = 6
+attribute[standard_name] = time
+attribute[long_name] = Data time
+attribute[units] = seconds since 1970-01-01T00:00:00Z
+attribute[axis] = T
+attribute[bounds] = time_bounds
+attribute[comment] = 2018-07-14T19:20:00Z
+---------- variable time, file f_00055800.mdv.nc ----------
+shape = (1,)
+dimension[time] = 1
+number of attributes = 6
+attribute[standard_name] = time
+attribute[long_name] = Data time
+attribute[units] = seconds since 1970-01-01T00:00:00Z
+attribute[axis] = T
+attribute[bounds] = time_bounds
+attribute[comment] = 2018-07-14T19:30:00Z
+---------- variable time, file f_00056400.mdv.nc ----------
+shape = (1,)
+dimension[time] = 1
+number of attributes = 6
+attribute[standard_name] = time
+attribute[long_name] = Data time
+attribute[units] = seconds since 1970-01-01T00:00:00Z
+attribute[axis] = T
+attribute[bounds] = time_bounds
+attribute[comment] = 2018-07-14T19:40:00Z
+---------- variable time, file f_00057000.mdv.nc ----------
+shape = (1,)
+dimension[time] = 1
+number of attributes = 6
+attribute[standard_name] = time
+attribute[long_name] = Data time
+attribute[units] = seconds since 1970-01-01T00:00:00Z
+attribute[axis] = T
+attribute[bounds] = time_bounds
+attribute[comment] = 2018-07-14T19:50:00Z
+---------- variable time, file f_00057600.mdv.nc ----------
+shape = (1,)
+dimension[time] = 1
+number of attributes = 6
+attribute[standard_name] = time
+attribute[long_name] = Data time
+attribute[units] = seconds since 1970-01-01T00:00:00Z
+attribute[axis] = T
+attribute[bounds] = time_bounds
+attribute[comment] = 2018-07-14T20:00:00Z
+---------- variable time, file f_00058200.mdv.nc ----------
+shape = (1,)
+dimension[time] = 1
+number of attributes = 6
+attribute[standard_name] = time
+attribute[long_name] = Data time
+attribute[units] = seconds since 1970-01-01T00:00:00Z
+attribute[axis] = T
+attribute[bounds] = time_bounds
+attribute[comment] = 2018-07-14T20:10:00Z
+---------- variable time, file f_00058800.mdv.nc ----------
+shape = (1,)
+dimension[time] = 1
+number of attributes = 6
+attribute[standard_name] = time
+attribute[long_name] = Data time
+attribute[units] = seconds since 1970-01-01T00:00:00Z
+attribute[axis] = T
+attribute[bounds] = time_bounds
+attribute[comment] = 2018-07-14T20:20:00Z
+---------- variable time, file f_00059400.mdv.nc ----------
+shape = (1,)
+dimension[time] = 1
+number of attributes = 6
+attribute[standard_name] = time
+attribute[long_name] = Data time
+attribute[units] = seconds since 1970-01-01T00:00:00Z
+attribute[axis] = T
+attribute[bounds] = time_bounds
+attribute[comment] = 2018-07-14T20:30:00Z
+---------- variable time, file f_00060000.mdv.nc ----------
+shape = (1,)
+dimension[time] = 1
+number of attributes = 6
+attribute[standard_name] = time
+attribute[long_name] = Data time
+attribute[units] = seconds since 1970-01-01T00:00:00Z
+attribute[axis] = T
+attribute[bounds] = time_bounds
+attribute[comment] = 2018-07-14T20:40:00Z
+---------- variable time, file f_00060600.mdv.nc ----------
+shape = (1,)
+dimension[time] = 1
+number of attributes = 6
+attribute[standard_name] = time
+attribute[long_name] = Data time
+attribute[units] = seconds since 1970-01-01T00:00:00Z
+attribute[axis] = T
+attribute[bounds] = time_bounds
+attribute[comment] = 2018-07-14T20:50:00Z
+---------- variable time, file f_00061200.mdv.nc ----------
+shape = (1,)
+dimension[time] = 1
+number of attributes = 6
+attribute[standard_name] = time
+attribute[long_name] = Data time
+attribute[units] = seconds since 1970-01-01T00:00:00Z
+attribute[axis] = T
+attribute[bounds] = time_bounds
+attribute[comment] = 2018-07-14T21:00:00Z
+---------- variable time, file f_00061800.mdv.nc ----------
+shape = (1,)
+dimension[time] = 1
+number of attributes = 6
+attribute[standard_name] = time
+attribute[long_name] = Data time
+attribute[units] = seconds since 1970-01-01T00:00:00Z
+attribute[axis] = T
+attribute[bounds] = time_bounds
+attribute[comment] = 2018-07-14T21:10:00Z
+---------- variable time, file f_00062400.mdv.nc ----------
+shape = (1,)
+dimension[time] = 1
+number of attributes = 6
+attribute[standard_name] = time
+attribute[long_name] = Data time
+attribute[units] = seconds since 1970-01-01T00:00:00Z
+attribute[axis] = T
+attribute[bounds] = time_bounds
+attribute[comment] = 2018-07-14T21:20:00Z
+---------- variable time, file f_00063000.mdv.nc ----------
+shape = (1,)
+dimension[time] = 1
+number of attributes = 6
+attribute[standard_name] = time
+attribute[long_name] = Data time
+attribute[units] = seconds since 1970-01-01T00:00:00Z
+attribute[axis] = T
+attribute[bounds] = time_bounds
+attribute[comment] = 2018-07-14T21:30:00Z
+---------- variable time, file f_00063600.mdv.nc ----------
+shape = (1,)
+dimension[time] = 1
+number of attributes = 6
+attribute[standard_name] = time
+attribute[long_name] = Data time
+attribute[units] = seconds since 1970-01-01T00:00:00Z
+attribute[axis] = T
+attribute[bounds] = time_bounds
+attribute[comment] = 2018-07-14T21:40:00Z
+---------- variable time, file f_00064200.mdv.nc ----------
+shape = (1,)
+dimension[time] = 1
+number of attributes = 6
+attribute[standard_name] = time
+attribute[long_name] = Data time
+attribute[units] = seconds since 1970-01-01T00:00:00Z
+attribute[axis] = T
+attribute[bounds] = time_bounds
+attribute[comment] = 2018-07-14T21:50:00Z
+---------- variable time, file f_00064800.mdv.nc ----------
+shape = (1,)
+dimension[time] = 1
+number of attributes = 6
+attribute[standard_name] = time
+attribute[long_name] = Data time
+attribute[units] = seconds since 1970-01-01T00:00:00Z
+attribute[axis] = T
+attribute[bounds] = time_bounds
+attribute[comment] = 2018-07-14T22:00:00Z

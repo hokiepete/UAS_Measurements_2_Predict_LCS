@@ -21,7 +21,6 @@ titlefont = {'fontsize':10}
 labelfont = {'fontsize':10}
 tickfont = {'fontsize':8}
 plt.close('all')
-
 F = np.load('wrf_les_s1.npz')
 x = F['x']
 y = F['y']
@@ -34,22 +33,37 @@ proj_center_lat = F['proj_center_lat']
 s1_wrf = 3600*F['s1']
 F.close()
 
+'''
 F = np.load('point_s1.npz')
 point_pos = F['pos']
 point_s1 = 3600*F['s1']
 point_time = F['time']
 F.close()
-
+'''
+ground2 = [-106.03917,37.781644]
+ground4 = [-106.041412,37.782097]
 ground5 = [-106.041504,37.782005]
-ground = ground5
+ground = ground4
 
-ross_lon = np.mean([-106.04076,-106.040763,-106.040762,-106.040762])
-ross_lat = np.mean([37.780287,37.780307,37.780398,37.780338])
+ross_lon = np.mean([-106.040753,-106.040746])
+ross_lat = np.mean([37.780308,37.780336])
 
-schmale_lon = np.mean([-106.0422848,-106.0422905,-106.0422956,-106.0422941])
-schmale_lat = np.mean([37.78153018,37.78155617,37.78156052,37.78156436])
+schmale_lon = np.mean([-106.0422614,-106.0422597])
+schmale_lat = np.mean([37.78156695,37.78158549])
+
 #(ross, schmale)
-paired_flights = [(22,9),(23,10),(25,11),(26,12)]
+paired_flights = [(16,7),(17,8)]
+plt.scatter(ground[0],ground[1],color='brown')
+plt.scatter(ross_lon,ross_lat,color='blue')
+plt.scatter(schmale_lon,schmale_lat,color='red')
+
+'''
+plt.scatter(ground[0],ground[1],color='brown')
+plt.scatter(ross_lon[0],ross_lat[0],color='blue')
+plt.scatter(ross_lon[1],ross_lat[1],color='blue')
+plt.scatter(schmale_lon[0],schmale_lat[0],color='red')
+plt.scatter(schmale_lon[1],schmale_lat[1],color='red')
+#'''
 
 ground_m = f.lonlat2m(proj_center_lon,proj_center_lat,ground[0],ground[1])
 ross_pos_m = f.lonlat2m(proj_center_lon,proj_center_lat,ross_lon,ross_lat)
@@ -102,7 +116,7 @@ for i, pair in enumerate(paired_flights):
         seconds.append(hrs_in_sec+min_in_sec+sec)
     schmale_data['time'] = seconds
 
-    ground_data = pd.read_csv('Ground5_MetData.txt', delim_whitespace=True,header=1,names=['date','time','wind_speed','wind_dir','temp'])
+    ground_data = pd.read_csv('Ground4_MetData.txt', delim_whitespace=True,header=1,names=['date','time','wind_speed','wind_dir','temp'])
     seconds = []
     for t in range(ground_data.shape[0]):
         hrs_in_sec = int(ground_data['time'][t][0:2])*3600
@@ -116,7 +130,9 @@ for i, pair in enumerate(paired_flights):
     
     if min_time>max_time:
         print('NO!')
-        break
+        print('Ross{:d}_DroneMetData.txt'.format(pair[0]))
+        print('Schmale{:d}_DroneMetData.txt'.format(pair[1]))
+        continue
     ross_data=ross_data[min_time<=ross_data['time']]
     ross_data=ross_data[ross_data['time']<=max_time]
     
@@ -164,7 +180,7 @@ width = 6
 
 plt.figure(1,figsize=(width,height))
 
-plt.subplot(511)
+plt.subplot(411)
 plt.plot(wrf_time,s1_plot)
 for x,y in zip(plt_sec,s1):
     x=[element/3600 for element in x]
@@ -177,7 +193,7 @@ plt.xticks([])
 plt.yticks(**tickfont)
 #plt.xlabel('Housrs since 0000hrs Mountain Time, 2018-07-17')
 
-plt.subplot(512)
+plt.subplot(412)
 plt.plot(wrf_time,schmale_s1_plot)
 for x,y in zip(plt_sec,s1):
     x=[element/3600 for element in x]
@@ -189,7 +205,7 @@ plt.ylim([-288,72])
 plt.xticks([])
 plt.yticks(**tickfont)
 
-plt.subplot(513)
+plt.subplot(413)
 plt.plot(wrf_time,ross_s1_plot)
 for x,y in zip(plt_sec,s1):
     x=[element/3600 for element in x]
@@ -201,7 +217,7 @@ plt.xlim([12,16])
 plt.xticks([])
 plt.yticks(**tickfont)
 
-plt.subplot(514)
+plt.subplot(414)
 plt.plot(wrf_time,ground_s1_plot)
 for x,y in zip(plt_sec,s1):
     x=[element/3600 for element in x]
@@ -210,9 +226,9 @@ plt.title('s$_{1}$ from WRF nearest MURC overlaid with s$_{1}$ from drone flight
 plt.ylim([-288,72])
 plt.xlim([12,16])
 plt.ylabel('hr$^{-1}$',**labelfont)
-plt.xticks([])
+plt.xticks(**tickfont)
 plt.yticks(**tickfont)
-
+'''
 plt.subplot(515)
 plt.plot(point_time,point_s1)
 for x,y in zip(plt_sec,s1):
@@ -225,5 +241,5 @@ plt.ylabel('hr$^{-1}$',**labelfont)
 plt.yticks(**tickfont)
 plt.xticks([12,13,14,15,16],**tickfont)
 plt.xlabel('Hours since 0000hrs Mountain Time, 2018-07-17',**labelfont)
-
-plt.savefig('s1_comparison_colorado_campaign_WRF_2018-07-17.png', transparent=False, bbox_inches='tight',pad_inches=0.02,dpi=300)
+'''
+plt.savefig('s1_comparison_colorado_campaign_WRF_2018-07-16.png', transparent=False, bbox_inches='tight',pad_inches=0.02,dpi=300)
