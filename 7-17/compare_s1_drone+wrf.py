@@ -21,7 +21,7 @@ titlefont = {'fontsize':10}
 labelfont = {'fontsize':10}
 tickfont = {'fontsize':8}
 plt.close('all')
-'''
+
 F = np.load('wrf_les_s1.npz')
 x = F['x']
 y = F['y']
@@ -39,7 +39,7 @@ point_pos = F['pos']
 point_s1 = 3600*F['s1']
 point_time = F['time']
 F.close()
-'''
+
 ground5 = [-106.041504,37.782005]
 ground = ground5
 
@@ -54,8 +54,6 @@ paired_flights = [(22,9),(23,10),(25,11),(26,12)]
 plt.scatter(ground[0],ground[1],color='brown')
 plt.scatter(ross_lon,ross_lat,color='blue')
 plt.scatter(schmale_lon,schmale_lat,color='red')
-import sys
-sys.exit()
 
 ground_m = f.lonlat2m(proj_center_lon,proj_center_lat,ground[0],ground[1])
 ross_pos_m = f.lonlat2m(proj_center_lon,proj_center_lat,ross_lon,ross_lat)
