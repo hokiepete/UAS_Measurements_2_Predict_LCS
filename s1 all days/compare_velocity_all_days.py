@@ -16,8 +16,8 @@ plt.close('all')
 ticks = [13,14,15,16,17]
 xmin=12.5
 xmax=17.5
-ymin=-288
-ymax=72
+ymin=0
+ymax=12
 FigSize=(6,5)
 plt.figure(1,figsize=FigSize)
 proj_center_lat = 37.8
@@ -26,9 +26,9 @@ ground2 = [-106.03917,37.781644]
 ground4 = [-106.041412,37.782097]
 ground5 = [-106.041504,37.782005]
 
-F = np.load('point_s1_07-14.npz')
+F = np.load('point_speed_07-14.npz')
 point_pos = F['pos']
-point_s1 = 3600*F['s1']
+point_s1 = F['speed']
 point_time = F['time']
 F.close()
 
@@ -116,15 +116,8 @@ for i, pair in enumerate(paired_flights):
         u_ground = -ground_data.iloc[t]['wind_speed']*np.sin(f.deg2rad(ground_data.iloc[t]['wind_dir']))
         v_ground = ground_data.iloc[t]['wind_speed']*np.cos(f.deg2rad(ground_data.iloc[t]['wind_dir']))
 
-        dudx = (u-u_schmale)/dx
-        dudy = (u-u_ross)/dy
-        dvdx = (v-v_schmale)/dx
-        dvdy = (v-v_ross)/dy
-        
-        J = np.array([[dudx,dudy],[dvdx,dvdy]])
-        S = 0.5*(J+J.T)
         plt_sec_temp.append(ground_data.iloc[t]['time'])
-        s1_temp.append(3600*np.linalg.eig(S)[0].min())
+        s1_temp.append(np.sqrt(u**2+v**2))
     
     plt_sec.append(plt_sec_temp)
     s1.append(s1_temp)
@@ -138,15 +131,15 @@ for x,y in zip(plt_sec,s1):
 plt.title('07-14-2018',**titlefont,y=0.96)
 plt.ylim([ymin,ymax])
 plt.xlim([xmin,xmax])
-plt.ylabel('hr$^{-1}$',**labelfont)
+plt.ylabel('m s$^{-1}$',**labelfont)
 plt.yticks(**tickfont)
 plt.xticks([])#ticks,**tickfont)
 #plt.xlabel('Hours since 0000hrs Mountain Time, 2018-07-14',**labelfont)
 
 
-F = np.load('point_s1_07-16.npz')
+F = np.load('point_speed_07-16.npz')
 point_pos = F['pos']
-point_s1 = 3600*F['s1']
+point_s1 = F['speed']
 point_time = F['time']
 F.close()
 
@@ -232,15 +225,8 @@ for i, pair in enumerate(paired_flights):
         u_ground = -ground_data.iloc[t]['wind_speed']*np.sin(f.deg2rad(ground_data.iloc[t]['wind_dir']))
         v_ground = ground_data.iloc[t]['wind_speed']*np.cos(f.deg2rad(ground_data.iloc[t]['wind_dir']))
 
-        dudx = (u-u_schmale)/dx
-        dudy = (u_ground-u)/dy
-        dvdx = (v-v_schmale)/dx
-        dvdy = (v_ground-v)/dy
-        
-        J = np.array([[dudx,dudy],[dvdx,dvdy]])
-        S = 0.5*(J+J.T)
         plt_sec_temp.append(ground_data.iloc[t]['time'])
-        s1_temp.append(3600*np.linalg.eig(S)[0].min())
+        s1_temp.append(np.sqrt(u**2+v**2))
     
     plt_sec.append(plt_sec_temp)
     s1.append(s1_temp)
@@ -254,14 +240,14 @@ for x,y in zip(plt_sec,s1):
 plt.title('07-16-2018',**titlefont,y=0.96)
 plt.ylim([ymin,ymax])
 plt.xlim([xmin,xmax])
-plt.ylabel('hr$^{-1}$',**labelfont)
+plt.ylabel('m s$^{-1}$',**labelfont)
 plt.yticks(**tickfont)
 plt.xticks([])#ticks,**tickfont)
 #plt.xlabel('Hours since 0000hrs Mountain Time, 2018-07-16',**labelfont)
 
-F = np.load('point_s1_07-17.npz')
+F = np.load('point_speed_07-17.npz')
 point_pos = F['pos']
-point_s1 = 3600*F['s1']
+point_s1 = F['speed']
 point_time = F['time']
 F.close()
 
@@ -346,15 +332,8 @@ for i, pair in enumerate(paired_flights):
         u_ground = -ground_data.iloc[t]['wind_speed']*np.sin(f.deg2rad(ground_data.iloc[t]['wind_dir']))
         v_ground = ground_data.iloc[t]['wind_speed']*np.cos(f.deg2rad(ground_data.iloc[t]['wind_dir']))
 
-        dudx = (u-u_schmale)/dx
-        dudy = (u_ground-u)/dy
-        dvdx = (v-v_schmale)/dx
-        dvdy = (v_ground-v)/dy
-        
-        J = np.array([[dudx,dudy],[dvdx,dvdy]])
-        S = 0.5*(J+J.T)
         plt_sec_temp.append(ground_data.iloc[t]['time'])
-        s1_temp.append(3600*np.linalg.eig(S)[0].min())
+        s1_temp.append(np.sqrt(u**2+v**2))
     
     plt_sec.append(plt_sec_temp)
     s1.append(s1_temp)
@@ -368,12 +347,12 @@ for x,y in zip(plt_sec,s1):
 plt.title('07-17-2018',**titlefont,y=0.96)
 plt.ylim([ymin,ymax])
 plt.xlim([xmin,xmax])
-plt.ylabel('hr$^{-1}$',**labelfont)
+plt.ylabel('m s$^{-1}$',**labelfont)
 plt.yticks(**tickfont)
 plt.xticks(ticks,**tickfont)
 plt.xlabel('Hours since 0000hrs Mountain Daylight Time',**labelfont)
 
-plt.savefig('s1_comparison_colorado_campaign_WRF.png', transparent=False, bbox_inches='tight',pad_inches=0.02,dpi=300)
+plt.savefig('speed_comparison_colorado_campaign_WRF.png', transparent=False, bbox_inches='tight',pad_inches=0.02,dpi=300)
 
 
 

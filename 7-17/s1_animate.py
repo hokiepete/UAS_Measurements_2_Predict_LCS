@@ -24,7 +24,8 @@ figwidth = 8
 FigSize=(figwidth, y.size/x.size*figwidth)
 for t in range(wrf_time.size):
     fig = plt.figure(figsize=FigSize)
-    plt.pcolormesh(lon,lat,s1[t,:,:],vmin=-0.04,vmax=0)
+    plt.pcolormesh(lon,lat,-s1[t,:,:],vmin=0,vmax=0.04)
+    plt.scatter(-106.041504,37.7815528075,color='red')
     #plt.colorbar()
     hr,minute = np.divmod(wrf_time[t],1)
     plt.title("{0:02d}:{1:02d} MDT, 2018-07-17".format(int(hr),int(round(minute*60))),fontsize=18)

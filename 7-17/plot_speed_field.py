@@ -17,7 +17,7 @@ titlefont = {'fontsize':10}
 labelfont = {'fontsize':10}
 tickfont = {'fontsize':8}
 #t_step = 24
-F = np.load('wrf_les_s1.npz')
+F = np.load('wrf_les.npz')
 x = F['x']
 y = F['y']
 wrf_time = F['time']
@@ -25,10 +25,12 @@ proj_center_lon = F['proj_center_lon']
 proj_center_lat = F['proj_center_lat']
 lat = F['lat']
 lon = F['lon']
-s1_wrf = F['s1']
+u = F['u']
+v = F['v']
 F.close()
 #time = tt.gmtime(wrf_time[t_step])
 
+s1_wrf = np.sqrt(u**2+v**2)
 
 plt.close('all')
 width = 6
@@ -38,9 +40,9 @@ gs1 = gridspec.GridSpec(2, 1)
 gs1.update(hspace=0.1)
 #plt.subplot(211)
 plt.subplot(gs1[0,0])
-t_step = 12
+t_step = 21
 time = tt.gmtime(wrf_time[t_step])
-plt.pcolormesh(lon,lat,3600*s1_wrf[t_step,:,:],vmin=-150,vmax=50)
+plt.pcolormesh(lon,lat,1*s1_wrf[t_step,:,:],vmin=0,vmax=15)
 plt.colorbar(label='hr$^{-1}$')
 plt.scatter(-106.041504,37.7815528075,color='red')
 plt.title('{0:02d}-{1:02d}-{2:02d}, {3:02d}{4:02d} MDT'.format(time[1],time[2],time[0],time[3]-6,time[4]),**titlefont,y=0.98)
@@ -48,9 +50,9 @@ plt.yticks(**tickfont)
 plt.xticks([])#**tickfont)
 #plt.subplot(212)
 plt.subplot(gs1[1,0])
-t_step = 23
+t_step = 24
 time = tt.gmtime(wrf_time[t_step])
-plt.pcolormesh(lon,lat,3600*s1_wrf[t_step,:,:],vmin=-150,vmax=50)
+plt.pcolormesh(lon,lat,1*s1_wrf[t_step,:,:],vmin=0,vmax=15)
 plt.colorbar(label='hr$^{-1}$')
 plt.scatter(-106.041504,37.7815528075,color='red')
 plt.title('{0:02d}-{1:02d}-{2:02d}, {3:02d}{4:02d} MDT'.format(time[1],time[2],time[0],time[3]-6,time[4]),**titlefont,y=0.98)

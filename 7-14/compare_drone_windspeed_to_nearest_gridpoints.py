@@ -72,8 +72,8 @@ time = np.linspace(t0,tf,time.shape[0])
 
 uk_stat_pos = [-106.03917,37.781644]
 
-ground5 = [-106.041504,37.782005]
-ground = ground5
+ground2 = [-106.03917,37.781644]
+ground = ground2
 
 ross_lon = np.mean([-106.04076,-106.040763,-106.040762,-106.040762])
 ross_lat = np.mean([37.780287,37.780307,37.780398,37.780338])
@@ -181,8 +181,8 @@ width = 6
 plt.close('all')
 plt.figure(1,figsize=(width,height))
 plt.subplot(511)
-plt.plot(ground_sec,ground_speed,color='orange')
-plt.plot(time,ground_comp_speed,color='blue')
+plt.plot(ground_sec,ground_speed,color='red')
+plt.plot(time,ground_comp_speed,color='black')
 plt.title('Wind speed from Ground overlaid with wind speed from WRF',**titlefont,y=0.96)
 #plt.xlabel('Hours since 0000hrs Mountain Time, 2018-07-17')
 plt.ylabel('m/s',**labelfont)
@@ -192,8 +192,8 @@ plt.yticks(**tickfont)
 plt.xticks([])
 
 plt.subplot(512)
-plt.plot(MURC_sec,MURC_speed,color='orange')
-plt.plot(time,ground_comp_speed,color='blue')
+plt.plot(MURC_sec,MURC_speed,color='red')
+plt.plot(time,ground_comp_speed,color='black')
 plt.title('Wind speed from MURC overlaid with wind speed from WRF',**titlefont,y=0.96)
 #plt.xlabel('Hours since 0000hrs Mountain Time, 2018-07-17')
 plt.ylabel('m/s',**labelfont)
@@ -203,8 +203,8 @@ plt.yticks(**tickfont)
 plt.xticks([])
 
 plt.subplot(513)
-plt.plot(uk_sec,uk_speed,color='orange')
-plt.plot(time,uk_comp_speed,color='blue')
+plt.plot(uk_sec,uk_speed,color='red')
+plt.plot(time,uk_comp_speed,color='black')
 plt.title('Wind speed from UK sonic overlaid with wind speed from WRF',**titlefont,y=0.96)
 #plt.xlabel('Hours since 0000hrs Mountain Time, 2018-07-17')
 plt.ylabel('m/s',**labelfont)
@@ -214,10 +214,10 @@ plt.yticks(**tickfont)
 plt.xticks([])
 
 plt.subplot(514)
-plt.plot(time,ross_comp_speed,color='blue')
+plt.plot(time,ross_comp_speed,color='black')
 for x,y in zip(ross_sec,ross_speed):
     x=[element/3600 for element in x]
-    plt.plot(x,y)
+    plt.plot(x,y,color='red')
 plt.title('Wind speed from WRF overlaid with wind speed from ``Ross" flights',**titlefont,y=0.96)
 plt.ylabel('m/s',**labelfont)
 plt.xlim([12,16])
@@ -226,16 +226,16 @@ plt.yticks(**tickfont)
 plt.xticks([])
 
 plt.subplot(515)
-plt.plot(time,schmale_comp_speed,color='blue')
+plt.plot(time,schmale_comp_speed,color='black')
 for x,y in zip(schmale_sec,schmale_speed):
     x=[element/3600 for element in x]
-    plt.plot(x,y)
+    plt.plot(x,y,color='red')
 plt.title('Wind speed from WRF overlaid with wind speed from ``Schmale" flights',**titlefont,y=0.96)
 plt.ylabel('m/s',**labelfont)
 plt.xlim([12,16])
 plt.ylim([0,10])
 plt.yticks(**tickfont)
 plt.xticks(**tickfont)
-plt.xlabel('Hours since 0000hrs Mountain Time, 2018-07-17',**labelfont)
+plt.xlabel('Hours since 0000hrs Mountain Time, 07-14-2018',**labelfont)
 
-plt.savefig('speed_comparison_colorado_campaign_WRF_2018-07-17.png', transparent=False, bbox_inches='tight',pad_inches=0.02,dpi=300)
+plt.savefig('speed_comparison_colorado_campaign_WRF_07-14-2018.png', transparent=False, bbox_inches='tight',pad_inches=0.02,dpi=300)

@@ -12,7 +12,7 @@ import matplotlib
 matplotlib.rcParams['text.usetex']=True
 matplotlib.rcParams['mathtext.fontset'] = 'cm'
 plt.rc('font', **{'family': 'serif', 'serif': ['cmr10']})
-
+matplotlib.rcParams['lines.linewidth']=1
 titlefont = {'fontsize':10}
 labelfont = {'fontsize':10}
 tickfont = {'fontsize':8}
@@ -49,6 +49,7 @@ plt.close('all')
 plt.figure(1,figsize=(width,height))
 plt.subplot(411)
 plt.plot(tower_sec,tower_2m)
+print(tower_2m.min(),tower_2m.max())
 plt.title('Temperature from tower 2m',**titlefont,y=0.96)
 #plt.xlabel('Hours since 0000hrs Mountain Time, 2018-07-17')
 plt.ylabel('$^{\circ}$C',**labelfont)
@@ -60,6 +61,7 @@ plt.xticks([])
 
 plt.subplot(412)
 plt.plot(tower_sec,tower_1_5m)
+print(tower_1_5m.min(),tower_1_5m.max())
 plt.title('Temperature from tower 1.5m',**titlefont,y=0.96)
 #plt.xlabel('Hours since 0000hrs Mountain Time, 2018-07-17')
 plt.ylabel('$^{\circ}$C',**labelfont)
@@ -71,6 +73,7 @@ plt.xticks([])
 
 plt.subplot(413)
 plt.plot(tower_sec,tower_0_75m)
+print(tower_0_75m.min(),tower_0_75m.max())
 plt.title('Temperature from tower 0.75m',**titlefont,y=0.96)
 #plt.xlabel('Hours since 0000hrs Mountain Time, 2018-07-17')
 plt.ylabel('$^{\circ}$C',**labelfont)
@@ -82,6 +85,7 @@ plt.xticks([])
 
 plt.subplot(414)
 plt.plot(uk_sec,uk_temp)
+print(uk_temp.min(),uk_temp.max())
 plt.title('Temperature from Sonic',**titlefont,y=0.96)
 #plt.xlabel('Hours since 0000hrs Mountain Time, 2018-07-17')
 plt.ylabel('$^{\circ}$C',**labelfont)
@@ -90,6 +94,6 @@ plt.xlim([0,24])
 plt.ylim([7,31])
 plt.yticks(**tickfont)
 plt.xticks(**tickfont)
-plt.xlabel('Hours since 0000hrs Mountain Time, 2018-07-17',**labelfont)
-plt.savefig('temperature_comparison_tower_vs_sonic_2018-07-17.png', transparent=False, bbox_inches='tight',pad_inches=0.02,dpi=300)
+plt.xlabel('Hours since 0000hrs Mountain Time, 07-17-2018',**labelfont)
+plt.savefig('temperature_comparison_tower_vs_sonic_07-17-2018.png', transparent=False, bbox_inches='tight',pad_inches=0.02,dpi=300)
 
