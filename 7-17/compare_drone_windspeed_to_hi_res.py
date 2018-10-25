@@ -20,56 +20,21 @@ matplotlib.rcParams['text.usetex']=True
 matplotlib.rcParams['mathtext.fontset'] = 'cm'
 plt.rc('font', **{'family': 'serif', 'serif': ['cmr10']})
 
+F = np.load('2018071717_hybrid/point_speed_07-17.npz')
+point_speed = F['speed']
+point_time = F['time']
+F.close()
+#lai_ts = pd.read_csv('2018071717_hybrid/CEN.d02.TS', delim_whitespace=True,header=0,names=['id', 'ts_hour', 'id_tsloc', 'ix', 'iy', 't', 'q', 'u', 'v', 'psfc', 'glw', 'gsw', 'hfx', 'lh', 'tsk', 'tslb', 'rainc', 'rainnc', 'clw'])
+
+
 titlefont = {'fontsize':10}
 labelfont = {'fontsize':10}
 tickfont = {'fontsize':8}
 
 plt.close('all')
 files = listdir('wrf_les/')
-interp_method = 'nearest'
 
-xdim = 1008
-ydim = 882
-zdim = 20
-height_level = 0
-tdim = len(files)
-time = np.empty([tdim])
-u = np.empty([tdim,ydim,xdim])
-v = np.empty([tdim,ydim,xdim])
-
-tt=0
-print(tt)
-ncfile='wrf_les/'+files[tt]
-root = Dataset(ncfile,'r') #read the data
-vars = root.variables #dictionary, all variables in dataset
-x = vars['x0'][:]*1000
-y = vars['y0'][:]*1000
-lon = vars['lon0'][:]
-lat = vars['lat0'][:]
-proj_center_lon = getattr(vars['grid_mapping_0'],'longitude_of_projection_origin')
-proj_center_lat = getattr(vars['grid_mapping_0'],'latitude_of_projection_origin')
-time[tt] = vars['time'][:]
-u[tt,:,:] = vars['UGRD_HTGL'][0,height_level,:,:].squeeze()
-v[tt,:,:] = vars['VGRD_HTGL'][0,height_level,:,:].squeeze()
-root.close()
-
-for tt in range(1,tdim):
-    print(tt)
-    ncfile='wrf_les/'+files[tt]
-    root = Dataset(ncfile,'r') #read the data
-    vars = root.variables #dictionary, all variables in dataset
-    time[tt] = vars['time'][:]
-    u[tt,:,:] = vars['UGRD_HTGL'][0,height_level,:,:].squeeze()
-    v[tt,:,:] = vars['VGRD_HTGL'][0,height_level,:,:].squeeze()
-    root.close()
-
-
-speed = np.sqrt(u**2+v**2)
-
-del u,v
-t0 = gmtime(time[0]).tm_hour-6
-tf = gmtime(time[-1]).tm_hour-6
-time = np.linspace(t0,tf,time.shape[0])
+#speed = np.sqrt(u**2+v**2)
 
 uk_stat_pos = [-106.03917,37.781644]
 
@@ -84,31 +49,7 @@ schmale_lat = np.mean([37.78153018,37.78155617,37.78156052,37.78156436])
 #(ross, schmale)
 paired_flights = [(22,9),(23,10),(25,11),(26,12)]
 
-ground_m = f.lonlat2m(proj_center_lon,proj_center_lat,ground[0],ground[1])
-ross_pos_m = f.lonlat2m(proj_center_lon,proj_center_lat,ross_lon,ross_lat)
-schmale_pos_m = f.lonlat2m(proj_center_lon,proj_center_lat,schmale_lon,schmale_lat)
-uk_stat_pos_m = f.lonlat2m(proj_center_lon,proj_center_lat,uk_stat_pos[0],uk_stat_pos[1])
 
-points = (time,y,x)
-[yi,ti,xi] = np.meshgrid(ross_pos_m[1],time,ross_pos_m[0])
-Xi = (ti.ravel(),yi.ravel(),xi.ravel())
-fs = RegularGridInterpolator(points,speed,method=interp_method)
-ross_comp_speed = fs(Xi)
-
-[yi,ti,xi] = np.meshgrid(schmale_pos_m[1],time,schmale_pos_m[0])
-Xi = (ti.ravel(),yi.ravel(),xi.ravel())
-fs = RegularGridInterpolator(points,speed,method=interp_method)
-schmale_comp_speed = fs(Xi)
-
-[yi,ti,xi] = np.meshgrid(ground_m[1],time,ground_m[0])
-Xi = (ti.ravel(),yi.ravel(),xi.ravel())
-fs = RegularGridInterpolator(points,speed,method=interp_method)
-ground_comp_speed = fs(Xi)
-
-[yi,ti,xi] = np.meshgrid(uk_stat_pos_m[1],time,uk_stat_pos_m[0])
-Xi = (ti.ravel(),yi.ravel(),xi.ravel())
-fs = RegularGridInterpolator(points,speed,method=interp_method)
-uk_comp_speed = fs(Xi)
 
 ground_data = pd.read_csv('Ground5_MetData.txt', delim_whitespace=True,header=1,names=['date','time','wind_speed','wind_dir','temp'])
 seconds = []
@@ -121,8 +62,6 @@ ground_speed = ground_data['wind_speed']
 ground_sec = [x/3600 for x in seconds]
 
 
-
-#MURC_data = pd.read_csv('MSLOG_20180717_TRIM.csv', sep=',',header=1,names=['sequence_number','date_stamp','time_stamp','time_usecs','node','wind_speed','wind_speed_units','wind_dir','wind_dir_units','u_axis_velocity','u_axis_velocity_units','v_axis_velocity','v_axis_velocity_units','w_axis_velocity','w_axis_velocity_units','pressure','pressure_units','humidity','humidity_units','temperature','temperature_units','dewpoint','dewpoint_units','prt','prt_units','speed_of_sound','speed_of_sound_units','sonic_temperature','sonic_temperature_units','supply_voltage','supply_voltage_units','analog_input_1','analog_input_1_units','analog_input_2','analog_input_2_units','digital_input_1','digital_input_1_units','status','checksum','raw_data','time_stamp','depth','depth_units','rain','rain_units','solar','solar_units','instrument_time_stamp','wind_sensor_status','compass_heading','compass_heading_units','corrected_wind_dir','corrected_wind_dir_units','avg_wind_speed','avg_wind_speed_units','avg_wind_dir','avg_wind_dir_units','gust_wind_speed','gust_wind_speed_units','gust_wind_dir','gust_wind_dir_units','avg_corrected_wind_dir','avg_corrected_wind_dir_units','total_precipitation','total_precipitation_units','precipitation_intensity','precipitation_intensity_units','precipitation_status','pressure_at_level','pressure_at_level_units','pressure_at_station','pressure_at_station_units','absolute_humidity','absolute_humidity_units','corrected_wind_speed','corrected_wind_speed_units','avg_corrected_wind_speed','avg_corrected_wind_speed_units','corrected_gust_direction','corrected_gust_direction_units','corrected_gust_speed','corrected_gust_speed_units','solar_radiation','solar_radiation_units','sunshine_hours','sunshine_hours_units','solar_sensor_status','GPS_location','GPS_heading','GPS_heading_units','GPS_speed_over_ground','GPS_speed_over_ground_units','GPS_sensor_status','QNH_pressure','QNH_pressure_units','avg_wind_speed_2_min','avg_wind_speed_2_min_units','avg_wind_speed_10_min','avg_wind_speed_10_min_units','avg_wind_dir_2_min','avg_wind_dir_2_min_units','avg_wind_dir_10_min','avg_wind_dir_10_min_units','wind_chill','wind_chill_units','heat_index','heat_index_units','air_density','air_density_units','wet_bulb_temperature','wet_bulb_temperature_units','sunrise_time','solar_noon_time','sunset_time	position_sun','twilight_civil','twilight_nautical','twilight_astronomical','x_tilt','x_tilt_units','y_tilt','y_tilt_units','z_orientation','z_orientation_units','user_information_field'])
 
 MURC_data = pd.read_csv('MSLOG_20180717_TRIM.csv', sep=',',header=1,usecols={2,5},names=['time_stamp','wind_speed'])
 seconds = []
@@ -183,7 +122,7 @@ plt.close('all')
 plt.figure(1,figsize=(width,height))
 plt.subplot(511)
 plt.plot(ground_sec,ground_speed,color='C1')
-plt.plot(time,ground_comp_speed,color='C0')
+plt.plot(point_time,point_speed,color='C0')
 plt.title('15m\_Tower\_Atmos22',**titlefont,y=0.96)
 #plt.xlabel('Hours since 0000hrs Mountain Time, 2018-07-17')
 plt.ylabel('m s$^{-1}$',**labelfont)
@@ -194,7 +133,7 @@ plt.xticks([])
 
 plt.subplot(512)
 plt.plot(MURC_sec,MURC_speed,color='C1')
-plt.plot(time,ground_comp_speed,color='C0')
+plt.plot(point_time,point_speed,color='C0')
 plt.title('15m\_Tower\_MURC\_3Dsonic',**titlefont,y=0.96)
 #plt.xlabel('Hours since 0000hrs Mountain Time, 2018-07-17')
 plt.ylabel('m s$^{-1}$',**labelfont)
@@ -205,7 +144,7 @@ plt.xticks([])
 
 plt.subplot(513)
 plt.plot(uk_sec,uk_speed,color='C1')
-plt.plot(time,uk_comp_speed,color='C0')
+plt.plot(point_time,point_speed,color='C0')
 plt.title('2m\_Tower\_CSAT3',**titlefont,y=0.96)
 #plt.xlabel('Hours since 0000hrs Mountain Time, 2018-07-17')
 plt.ylabel('m s$^{-1}$',**labelfont)
@@ -215,7 +154,7 @@ plt.yticks(**tickfont)
 plt.xticks([])
 
 plt.subplot(514)
-plt.plot(time,ross_comp_speed,color='C0')
+plt.plot(point_time,point_speed,color='C0')
 for x,y in zip(ross_sec,ross_speed):
     x=[element/3600 for element in x]
     plt.plot(x,y,color='C1')
@@ -227,7 +166,7 @@ plt.yticks(**tickfont)
 plt.xticks([])
 
 plt.subplot(515)
-plt.plot(time,schmale_comp_speed,color='C0')
+plt.plot(point_time,point_speed,color='C0')
 for x,y in zip(schmale_sec,schmale_speed):
     x=[element/3600 for element in x]
     plt.plot(x,y,color='C1')
@@ -239,4 +178,4 @@ plt.yticks(**tickfont)
 plt.xticks(**tickfont)
 plt.xlabel('Hours since 0000hrs Mountain Time, 07-17-2018',**labelfont)
 
-plt.savefig('speed_comparison_colorado_campaign_WRF_07-17-2018.png', transparent=False, bbox_inches='tight',pad_inches=0.02,dpi=300)
+plt.savefig('speed_comparison_colorado_campaign_WRF_07-17-2018_hi_res.png', transparent=False, bbox_inches='tight',pad_inches=0.02,dpi=300)
