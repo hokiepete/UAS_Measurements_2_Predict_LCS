@@ -20,12 +20,13 @@ matplotlib.rcParams['text.usetex']=True
 matplotlib.rcParams['mathtext.fontset'] = 'cm'
 plt.rc('font', **{'family': 'serif', 'serif': ['cmr10']})
 
-F = np.load('2018071717_hybrid/point_speed_07-17.npz')
-point_speed = F['speed']
-point_time = F['time']
-F.close()
-#lai_ts = pd.read_csv('2018071717_hybrid/CEN.d02.TS', delim_whitespace=True,header=0,names=['id', 'ts_hour', 'id_tsloc', 'ix', 'iy', 't', 'q', 'u', 'v', 'psfc', 'glw', 'gsw', 'hfx', 'lh', 'tsk', 'tslb', 'rainc', 'rainnc', 'clw'])
-
+#F = np.load('2018071717_hybrid/point_speed_07-17.npz')
+#point_speed = F['speed']
+#point_time = F['time']
+#F.close()
+lai_ts = pd.read_csv('2018071717_hybrid/CEN.d02.TS', delim_whitespace=True,header=0,names=['id', 'ts_hour', 'id_tsloc', 'ix', 'iy', 't', 'q', 'u', 'v', 'psfc', 'glw', 'gsw', 'hfx', 'lh', 'tsk', 'tslb', 'rainc', 'rainnc', 'clw'])
+point_speed = lai_ts['t']-273.15
+point_time = lai_ts['ts_hour']+11
 
 titlefont = {'fontsize':10}
 labelfont = {'fontsize':10}
@@ -58,12 +59,12 @@ for t in range(ground_data.shape[0]):
     min_in_sec = int(ground_data['time'][t][3:5])*60
     sec = int(ground_data['time'][t][6:8])
     seconds.append(hrs_in_sec+min_in_sec+sec)
-ground_speed = ground_data['wind_speed']
+ground_speed = ground_data['temp']
 ground_sec = [x/3600 for x in seconds]
 
 
 
-MURC_data = pd.read_csv('MSLOG_20180717_TRIM.csv', sep=',',header=1,usecols={2,5},names=['time_stamp','wind_speed'])
+MURC_data = pd.read_csv('MSLOG_20180717_TRIM.csv', sep=',',header=1,usecols={2,5,19},names=['time_stamp','wind_speed','temperature'])
 seconds = []
 for t in range(MURC_data.shape[0]):
     if ':' not in MURC_data['time_stamp'][t][0:2]:
@@ -76,7 +77,7 @@ for t in range(MURC_data.shape[0]):
         sec = int(MURC_data['time_stamp'][t][5:7])
     seconds.append(hrs_in_sec+min_in_sec+sec)
 MURC_sec = [x/3600 for x in seconds]
-MURC_speed = MURC_data['wind_speed']
+MURC_speed = MURC_data['temperature']
 
 uk_data = pd.read_csv('UK_station.csv', delim_whitespace=False,header=0,names=['date-time','u','v','w','temp'])
 seconds = []
@@ -85,7 +86,7 @@ for t in range(uk_data.shape[0]):
     min_in_sec = int(uk_data['date-time'][t][15:17])*60
     sec = int(uk_data['date-time'][t][18:20])
     seconds.append(hrs_in_sec+min_in_sec+sec)
-uk_speed = np.sqrt(uk_data['u']**2+uk_data['v']**2+uk_data['w']**2)
+uk_speed = uk_data['temp']#np.sqrt(uk_data['u']**2+uk_data['v']**2+uk_data['w']**2)
 uk_sec = [x/3600 for x in seconds]
 
 ross_speed=[]
@@ -101,7 +102,7 @@ for i, pair in enumerate(paired_flights):
         sec = int(ross_data['time'][t][6:8])
         seconds.append(hrs_in_sec+min_in_sec+sec)
     ross_sec.append(seconds)
-    ross_speed.append(ross_data['wind_speed'])
+    ross_speed.append(ross_data['temp'])
     
     schmale_data = pd.read_csv('Schmale{:d}_DroneMetData.txt'.format(pair[1]), delim_whitespace=True,header=1,names=['date','time','wind_speed','wind_dir','temp'])
     seconds = []
@@ -110,7 +111,7 @@ for i, pair in enumerate(paired_flights):
         min_in_sec = int(schmale_data['time'][t][3:5])*60
         sec = int(schmale_data['time'][t][6:8])
         seconds.append(hrs_in_sec+min_in_sec+sec)
-    schmale_speed.append(schmale_data['wind_speed'])
+    schmale_speed.append(schmale_data['temp'])
     schmale_sec.append(seconds)
 
     
@@ -125,9 +126,9 @@ plt.plot(ground_sec,ground_speed,color='C1')
 plt.plot(point_time,point_speed,color='C0')
 plt.title('15m\_Tower\_Atmos22',**titlefont,y=0.96)
 #plt.xlabel('Hours since 0000hrs Mountain Time, 2018-07-17')
-plt.ylabel('m s$^{-1}$',**labelfont)
+plt.ylabel('$^{\\circ}$C',**labelfont)
 plt.xlim([12,16])
-plt.ylim([0,10])
+plt.ylim([17,30])
 plt.yticks(**tickfont)
 plt.xticks([])
 
@@ -136,9 +137,9 @@ plt.plot(MURC_sec,MURC_speed,color='C1')
 plt.plot(point_time,point_speed,color='C0')
 plt.title('15m\_Tower\_MURC\_3Dsonic',**titlefont,y=0.96)
 #plt.xlabel('Hours since 0000hrs Mountain Time, 2018-07-17')
-plt.ylabel('m s$^{-1}$',**labelfont)
+plt.ylabel('$^{\\circ}$C',**labelfont)
 plt.xlim([12,16])
-plt.ylim([0,10])
+plt.ylim([17,30])
 plt.yticks(**tickfont)
 plt.xticks([])
 
@@ -147,9 +148,9 @@ plt.plot(uk_sec,uk_speed,color='C1')
 plt.plot(point_time,point_speed,color='C0')
 plt.title('2m\_Tower\_CSAT3',**titlefont,y=0.96)
 #plt.xlabel('Hours since 0000hrs Mountain Time, 2018-07-17')
-plt.ylabel('m s$^{-1}$',**labelfont)
+plt.ylabel('$^{\\circ}$C',**labelfont)
 plt.xlim([12,16])
-plt.ylim([0,10])
+plt.ylim([17,30])
 plt.yticks(**tickfont)
 plt.xticks([])
 
@@ -159,9 +160,9 @@ for x,y in zip(ross_sec,ross_speed):
     x=[element/3600 for element in x]
     plt.plot(x,y,color='C1')
 plt.title('15m\_UAS\_Ross\_Atmos22',**titlefont,y=0.96)
-plt.ylabel('m s$^{-1}$',**labelfont)
+plt.ylabel('$^{\\circ}$C',**labelfont)
 plt.xlim([12,16])
-plt.ylim([0,10])
+plt.ylim([17,30])
 plt.yticks(**tickfont)
 plt.xticks([])
 
@@ -171,11 +172,11 @@ for x,y in zip(schmale_sec,schmale_speed):
     x=[element/3600 for element in x]
     plt.plot(x,y,color='C1')
 plt.title('15m\_UAS\_Schmale\_Atmos22',**titlefont,y=0.96)
-plt.ylabel('m s$^{-1}$',**labelfont)
+plt.ylabel('$^{\\circ}$C',**labelfont)
 plt.xlim([12,16])
-plt.ylim([0,10])
+plt.ylim([17,30])
 plt.yticks(**tickfont)
 plt.xticks(**tickfont)
-plt.xlabel('Hours since 0000hrs Mountain Time, 07-17-2018',**labelfont)
+plt.xlabel('Hours since 0000hrs Mountain Daylight Time, 07-17-2018',**labelfont)
 
-plt.savefig('speed_comparison_colorado_campaign_WRF_07-17-2018_hi_res.png', transparent=False, bbox_inches='tight',pad_inches=0.02,dpi=300)
+plt.savefig('temperature_comparison_colorado_campaign_WRF_07-17-2018_hi_res.png', transparent=False, bbox_inches='tight',pad_inches=0.02,dpi=300)
