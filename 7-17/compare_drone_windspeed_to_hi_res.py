@@ -176,6 +176,6 @@ plt.xlim([12,16])
 plt.ylim([0,10])
 plt.yticks(**tickfont)
 plt.xticks(**tickfont)
-plt.xlabel('Hours since 0000hrs Mountain Time, 07-17-2018',**labelfont)
+plt.xlabel('Hours since 0000hrs Mountain Daylight Time, 07-17-2018',**labelfont)
 
 plt.savefig('speed_comparison_colorado_campaign_WRF_07-17-2018_hi_res.png', transparent=False, bbox_inches='tight',pad_inches=0.02,dpi=300)
