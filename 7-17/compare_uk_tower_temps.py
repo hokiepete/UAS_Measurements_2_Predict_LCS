@@ -41,12 +41,28 @@ tower_0_75m = uk_tower['0.75m']
 tower_sec = [x/3600 for x in seconds]
 
     
-height = 8.5
+height = 3
 width = 6
 #height = 15
 #width = height*1.61803398875
 plt.close('all')
 plt.figure(1,figsize=(width,height))
+plt.plot(uk_sec,uk_temp,label='Temperature from Sonic')
+plt.plot(tower_sec,tower_2m,label='Temperature from tower 2m')
+plt.plot(tower_sec,tower_1_5m,label='Temperature from tower 1.5m')
+plt.plot(tower_sec,tower_0_75m,label='Temperature from tower 0.75m')
+plt.ylabel('$^{\circ}$C',**labelfont)
+#plt.xlim([12,16])
+plt.xlim([0,24])
+plt.ylim([7,31])
+plt.yticks(**tickfont)
+plt.xticks([])
+plt.legend()
+
+plt.xlabel('Hours since 0000hrs Mountain Time, 07-17-2018',**labelfont)
+#plt.savefig('temperature_comparison_tower_vs_sonic_07-17-2018.png', transparent=False, bbox_inches='tight',pad_inches=0.02,dpi=300)
+
+'''
 plt.subplot(411)
 plt.plot(tower_sec,tower_2m)
 print(tower_2m.min(),tower_2m.max())
@@ -96,4 +112,4 @@ plt.yticks(**tickfont)
 plt.xticks(**tickfont)
 plt.xlabel('Hours since 0000hrs Mountain Time, 07-17-2018',**labelfont)
 plt.savefig('temperature_comparison_tower_vs_sonic_07-17-2018.png', transparent=False, bbox_inches='tight',pad_inches=0.02,dpi=300)
-
+'''
