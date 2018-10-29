@@ -123,6 +123,9 @@ plt.plot(point_time,point_s1,color='C0')
 for x,y in zip(plt_sec,s1):
     x=[element/3600 for element in x]
     plt.plot(x,y,color='C1')
+    yy=np.mean(y)
+    plt.plot([x[0],x[-1]],[yy,yy],color='k')
+
 #plt.title('s$_{1}$ from WRF TS overlaid with s$_{1}$ from drone flights',**titlefont,y=0.96)
 #plt.title('07-17-2018',**titlefont)#,y=0.96)
 plt.ylim([ymin,ymax])
@@ -130,7 +133,7 @@ plt.xlim([xmin,xmax])
 plt.ylabel('m s$^{-1}$',**labelfont)
 plt.yticks(**tickfont)
 plt.xticks(**tickfont)
-plt.xlabel('Hours since 0000hrs Mountain Daylight Time, 07-17-2018',**labelfont)
+plt.xlabel('Hours Mountain Daylight Time, 07-17-2018',**labelfont)
 
 plt.savefig('speed_comparison_colorado_campaign_WRF.png', transparent=False, bbox_inches='tight',pad_inches=0.02,dpi=300)
 
