@@ -32,7 +32,7 @@ F.close()
 
 plt.close('all')
 width = 6
-height = 4
+height = 9/16*width
 plt.figure(1,figsize=(width,height))
 #gs1 = gridspec.GridSpec(2, 1)
 #gs1.update(hspace=0.1)
