@@ -114,6 +114,7 @@ plt.ylim([17,30])
 plt.xlabel('Hours Mountain Daylight Time, 07-17-2018',**labelfont)
 plt.yticks(**tickfont)
 plt.xticks(**tickfont)
+plt.grid()
 plt.savefig('temp_A_colorado_campaign_WRF_07-17-2018.png', transparent=False, bbox_inches='tight',pad_inches=0.02,dpi=300)
 
 '''
@@ -155,4 +156,5 @@ plt.ylim([17,30])
 plt.xlabel('Hours Mountain Daylight Time, 07-17-2018',**labelfont)
 plt.yticks(**tickfont)
 plt.xticks(**tickfont)
+plt.grid()
 plt.savefig('temp_B_colorado_campaign_WRF_07-17-2018.png', transparent=False, bbox_inches='tight',pad_inches=0.02,dpi=300)

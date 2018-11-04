@@ -126,13 +126,13 @@ for i, pair in enumerate(paired_flights):
     plt_sec.append(plt_sec_temp)
     s1.append(s1_temp)
 
-x=np.arange(15.82,15.90,0.01)
+x=np.arange(15.82,15.90,0.005)
 for x in x:
-    plt.axvline(x,color='lightgray')
+    plt.axvline(x,color='khaki')
     
-x=np.arange(13.98,14.06,0.01)
+x=np.arange(13.98,14.06,0.005)
 for x in x:
-    plt.axvline(x,color='lightgray')
+    plt.axvline(x,color='khaki')
     
 plt.plot(point_time,point_s1,color='C0')
 for x,y in zip(plt_sec,s1):
@@ -148,7 +148,7 @@ plt.ylabel('hr$^{-1}$',**labelfont)
 plt.yticks(**tickfont)
 plt.xticks(**tickfont)
 plt.xlabel('Hours Mountain Daylight Time, 07-17-2018',**labelfont)
-
+plt.grid()#color='gray')
 plt.savefig('s1_comparison_colorado_campaign_WRF.png', transparent=False, bbox_inches='tight',pad_inches=0.02,dpi=300)
 
 

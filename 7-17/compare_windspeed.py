@@ -114,6 +114,7 @@ plt.xlim([12,16])
 plt.ylim([0,10])
 plt.yticks(**tickfont)
 plt.xticks(**tickfont)
+plt.grid()
 plt.savefig('speed_A_colorado_campaign_WRF_07-17-2018.png', transparent=False, bbox_inches='tight',pad_inches=0.02,dpi=300)
 
 '''
@@ -155,4 +156,5 @@ plt.xlim([12,16])
 plt.ylim([0,10])
 plt.yticks(**tickfont)
 plt.xticks(**tickfont)
+plt.grid()
 plt.savefig('speed_B_colorado_campaign_WRF_07-17-2018.png', transparent=False, bbox_inches='tight',pad_inches=0.02,dpi=300)

@@ -17,7 +17,7 @@ ticks = [13,14,15,16,17]
 xmin=12
 xmax=16
 ymin=0
-ymax=12
+ymax=10
 FigSize=(6,3)#6*9/16)
 plt.figure(1,figsize=FigSize)
 proj_center_lat = 37.8
@@ -134,7 +134,7 @@ plt.ylabel('m s$^{-1}$',**labelfont)
 plt.yticks(**tickfont)
 plt.xticks(**tickfont)
 plt.xlabel('Hours Mountain Daylight Time, 07-17-2018',**labelfont)
-
+plt.grid()
 plt.savefig('speed_comparison_colorado_campaign_WRF.png', transparent=False, bbox_inches='tight',pad_inches=0.02,dpi=300)
 
 
